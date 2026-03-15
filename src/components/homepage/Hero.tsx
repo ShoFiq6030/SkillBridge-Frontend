@@ -180,17 +180,15 @@ export default function Hero({
         {/* hero right  */}
         <div className="relative min-h-[560px] lg:min-h-[520px]">
           {profileCards.map((card) => (
-            <div>
-              <CourseCard
-                key={card.id}
-                className={card.className}
-                bg={card.bg}
-                image={card.image}
-                alt={card.name}
-                rating={card.rating}
-                comment={card.comment}
-              />
-            </div>
+            <CourseCard
+              key={card.id}
+              className={card.className}
+              bg={card.bg}
+              image={card.image}
+              alt={card.name}
+              rating={card.rating}
+              comment={card.comment}
+            />
           ))}
         </div>
       </div>
