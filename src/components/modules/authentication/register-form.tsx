@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 import {
   Card,
   CardContent,
@@ -16,8 +17,11 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-// import { authClient } from "@/lib/auth-client";
+import { authClient } from "@/lib/auth-client";
 import { useForm } from "@tanstack/react-form";
+
+import { Label } from "@/components/ui/label";
+
 import { toast } from "sonner";
 import * as z from "zod";
 
@@ -25,42 +29,53 @@ const formSchema = z.object({
   name: z.string().min(1, "This field is required"),
   password: z.string().min(8, "Minimum length is 8"),
   email: z.email(),
+  role: z.string().min(1, "This field is required"),
 });
 
 export function RegisterForm({ ...props }: React.ComponentProps<typeof Card>) {
-  // const handleGoogleLogin = async () => {
-  //   const data = authClient.signIn.social({
-  //     provider: "google",
-  //     callbackURL: "http://localhost:3000",
-  //   });
+  const handleGoogleLogin = async () => {
+    try {
+      const data = await authClient.signIn.social({
+        provider: "google",
+        callbackURL: "http://localhost:3000",
+      });
 
-  //   console.log(data);
-  // };
+      console.log(data);
+    } catch (error) {
+      console.error("Google login failed:", error);
+    }
+  };
+  const router = useRouter();
 
   const form = useForm({
     defaultValues: {
       name: "",
       email: "",
       password: "",
+      role: "USER",
     },
     validators: {
       onSubmit: formSchema,
     },
-    // onSubmit: async ({ value }) => {
-    //   const toastId = toast.loading("Creating user");
-    //   try {
-    //     const { data, error } = await authClient.signUp.email(value);
+    onSubmit: async ({ value }) => {
+      const toastId = toast.loading("Creating user");
+      try {
+        const { data, error } = await authClient.signUp.email({
+          ...value,
+          callbackURL: `${process.env.NEXT_PUBLIC_FRONTEND_URL}/login`,
+        });
 
-    //     if (error) {
-    //       toast.error(error.message, { id: toastId });
-    //       return;
-    //     }
+        if (error) {
+          toast.error(error.message, { id: toastId });
+          return;
+        }
 
-    //     toast.success("User Created Successfully", { id: toastId });
-    //   } catch (err) {
-    //     toast.error("Something went wrong, please try again.", { id: toastId });
-    //   }
-    // },
+        toast.success("User Created Successfully", { id: toastId });
+        router.push("/login");
+      } catch (err) {
+        toast.error("Something went wrong, please try again.", { id: toastId });
+      }
+    },
   });
 
   return (
@@ -146,6 +161,39 @@ export function RegisterForm({ ...props }: React.ComponentProps<typeof Card>) {
                 );
               }}
             />
+            {/* Sign up as Tutor */}
+            <form.Field
+              name="role"
+              children={(field) => {
+                const isInvalid =
+                  field.state.meta.isTouched && !field.state.meta.isValid;
+                return (
+                  <Field orientation="horizontal">
+                    <Label htmlFor={field.name}>Signup as Tutor</Label>
+                    <Input
+                      type="checkbox"
+                      id={field.name}
+                      name={field.name}
+                      checked={field.state.value === "TUTOR"}
+                      onChange={(e) =>
+                        field.handleChange(e.target.checked ? "TUTOR" : "USER")
+                      }
+                      className="h-4 w-4"
+                    />
+                    {isInvalid && (
+                      <FieldError errors={field.state.meta.errors} />
+                    )}
+                  </Field>
+                );
+              }}
+            />
+
+            <p>
+              Already have an account?{" "}
+              <a href="/login" className="text-blue-500 hover:underline">
+                Login
+              </a>
+            </p>
           </FieldGroup>
         </form>
       </CardContent>
@@ -154,7 +202,7 @@ export function RegisterForm({ ...props }: React.ComponentProps<typeof Card>) {
           Register
         </Button>
         <Button
-          // onClick={() => handleGoogleLogin()}
+          onClick={() => handleGoogleLogin()}
           variant="outline"
           type="button"
           className="w-full"

@@ -68,7 +68,7 @@ function RatingCard({ rating, comment }: { rating: number; comment: string }) {
       <div className="min-w-0 ">
         <div className="mb-1 flex gap-1 text-stone-300">
           {Array.from({ length: rating }).map((_, i) => (
-            <FaStar className="text-yellow-400" />
+            <FaStar key={i} className="text-yellow-400" />
           ))}
         </div>
         <div className="space-y-1">
@@ -116,7 +116,7 @@ export default function Hero({
   ctaLabel = "Explore our courses",
 }: HeroSectionProps) {
   return (
-    <section className="relative overflow-hidden bg-[#165f00]  text-white">
+    <section className="relative overflow-hidden bg-[#165f00] rounded-2xl  text-white">
       <div className="absolute inset-0 opacity-20">
         <div className="absolute inset-y-0 left-[44%] w-px -skew-x-[22deg] bg-white/20 " />
         <div className="absolute inset-y-0 left-[58%] w-px -skew-x-[22deg] bg-white/10 " />
