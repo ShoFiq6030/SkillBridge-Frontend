@@ -1,6 +1,6 @@
 import { tutorService } from "@/services/tutor.service";
 import { Tutor } from "@/types";
-import TutorCard from "../layout/TutorCard";
+import TutorCard from "../../layout/TutorCard";
 
 export default async function PopularTutorSection() {
   const { data, error } = await tutorService.getTutors(
@@ -17,14 +17,14 @@ export default async function PopularTutorSection() {
   console.log(data);
 
   return (
-    <section className="bg-[#f5f3f1] dark:bg-neutral-900 px-6 py-16 md:px-10 lg:px-16 lg:py-20 rounded-2xl">
+    <section className="bg-[#f5f3f1] dark:bg-neutral-900 px-6 py-16 md:px-10 lg:px-16 lg:py-20 rounded-4xl">
       <div className="mx-auto max-w-6xl">
         <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
           <div className="mx-auto ">
             <h2 className="text-3xl flex flex-col items-center justify-center font-semibold leading-tight tracking-tight text-[#1d120d] dark:text-white md:text-4xl">
-              <h3>Explore popular</h3>
+              <p>Explore popular</p>
               <span className="font-serif italic mx-auto font-medium text-[#f47c4d]">
-                Course
+                Tutor
               </span>
             </h2>
           </div>

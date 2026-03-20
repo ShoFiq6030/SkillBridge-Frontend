@@ -15,7 +15,7 @@ export default function TutorCard({ tutor }: { tutor: Tutor }) {
                   alt={course.title}
                   className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                 /> */}
-        <div className="absolute h-40 w-40 top-8 overflow-hidden rounded-full bg-neutral-200 dark:bg-neutral-700 z-10">
+        <div className="absolute h-40 w-40 top-8 overflow-hidden rounded-full bg-neutral-200 dark:bg-neutral-700 z-10 border border-neutral-800 dark:border-white">
           {tutor.user.image ? (
             <img
               src={tutor.user.image}
