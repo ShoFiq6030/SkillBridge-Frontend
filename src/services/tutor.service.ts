@@ -69,7 +69,15 @@ export const tutorService = {
 
   getTutorById: async function (id: string) {
     try {
-      const res = await fetch(`${process.env.API_URL}/api/tutor-profile/${id}`);
+      const res = await fetch(
+        `${process.env.API_URL}/api/tutor-profile/${id}`,
+        {
+          cache: "no-store",
+          next: {
+            tags: ["tutor-profile"],
+          },
+        },
+      );
 
       const data = await res.json();
 
