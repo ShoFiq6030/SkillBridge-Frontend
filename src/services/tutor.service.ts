@@ -7,7 +7,7 @@ interface ServiceOptions {
   revalidate?: number;
 }
 
-interface GetTutorsParams {
+export interface TutorsParams {
   search?: string;
   category?: string;
   minHourlyRate?: number;
@@ -28,7 +28,7 @@ interface GetTutorsParams {
 
 export const tutorService = {
   getTutors: async function (
-    params?: GetTutorsParams,
+    params?: TutorsParams,
     options?: ServiceOptions,
   ) {
     try {
@@ -82,6 +82,24 @@ export const tutorService = {
       const data = await res.json();
 
       return { data: data.tutorProfile, error: null };
+    } catch (err) {
+      return { data: null, error: { message: "Something Went Wrong" } };
+    }
+  },
+
+  getCategories: async function () {
+    try {
+      const res = await fetch(`${process.env.API_URL}/api/categories`, {
+        cache: "force-cache",
+        next: { revalidate: 60, tags: ["categories"] },
+      });
+
+      const data = await res.json();
+      if (!data.success) {
+        return { data: null, error: { message: "Failed to fetch categories" } };
+      }
+      console.log(data);
+      return { data: data.data, error: null };
     } catch (err) {
       return { data: null, error: { message: "Something Went Wrong" } };
     }

@@ -1,6 +1,7 @@
 import { tutorService } from "@/services/tutor.service";
 import { Tutor } from "@/types";
 import TutorCard from "../../layout/TutorCard";
+import Link  from 'next/link';
 
 export default async function PopularTutorSection() {
   const { data, error } = await tutorService.getTutors(
@@ -57,9 +58,11 @@ export default async function PopularTutorSection() {
         </div>
 
         <div className="mt-10 flex justify-center">
-          <button className="inline-flex items-center rounded-full bg-[#ff7a3d] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-orange-200 dark:shadow-none transition hover:translate-y-[-1px] hover:bg-[#f06f33]">
+          <Link
+            href="/tutors"
+           className="inline-flex items-center rounded-full bg-[#ff7a3d] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-orange-200 dark:shadow-none transition hover:translate-y-px hover:bg-[#f06f33]">
             Browse More →
-          </button>
+          </Link>
         </div>
       </div>
     </section>
