@@ -1,9 +1,10 @@
 import { Tutor } from "@/types";
 import FavoriteButton from "./FavoriteButton";
 import Link from "next/link";
-
+import { authClient } from "@/lib/auth-client";
 
 export default function TutorCard({ tutor }: { tutor: Tutor }) {
+
   return (
     <article
       key={tutor.id}
@@ -77,7 +78,10 @@ export default function TutorCard({ tutor }: { tutor: Tutor }) {
           </span>
         </div>
 
-        <Link href={`/tutors/${tutor.id}`} className="mt-5 inline-flex items-center rounded-full border border-[#ff7a3d] px-5 py-2 text-sm font-medium text-[#ff7a3d] transition hover:bg-[#ff7a3d] hover:text-white">
+        <Link
+          href={`/tutors/${tutor.id}`}
+          className="mt-5 inline-flex items-center rounded-full border border-[#ff7a3d] px-5 py-2 text-sm font-medium text-[#ff7a3d] transition hover:bg-[#ff7a3d] hover:text-white"
+        >
           Book a Slot →
         </Link>
       </div>

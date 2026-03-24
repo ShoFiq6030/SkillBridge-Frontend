@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { FaSearch } from "react-icons/fa";
+import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 
 interface TutorFiltersProps {
   categories: { id: string; name: string; slug: string }[];
@@ -115,6 +116,9 @@ export default function TutorFilters({ categories }: TutorFiltersProps) {
             onClick={() => setIsOpen((prev) => !prev)}
             className="w-full border rounded-md px-3 py-2 text-left bg-background"
           >
+            <div className="absolute right-3 top-10">
+              {isOpen ? <IoIosArrowUp /> : <IoIosArrowDown />}
+            </div>
             {category
               ? categories.find((c) => c.slug === category)?.name
               : "All categories"}
@@ -163,7 +167,7 @@ export default function TutorFilters({ categories }: TutorFiltersProps) {
           <label className="block text-sm mb-2">Max Rate</label>
           <Input
             type="number"
-             placeholder="Maximum hourly rate..."
+            placeholder="Maximum hourly rate..."
             value={maxHourlyRate}
             onChange={(e) => setMaxHourlyRate(e.target.value)}
           />
@@ -189,6 +193,9 @@ export default function TutorFilters({ categories }: TutorFiltersProps) {
             onClick={() => setSortOpen((prev) => !prev)}
             className="w-full border rounded-md px-3 py-2 text-left bg-background"
           >
+            <div className="absolute right-3 top-10">
+              {sortOpen ? <IoIosArrowUp /> : <IoIosArrowDown />}
+            </div>
             {sortBy
               ? sortOptions.find((opt) => opt.value === sortBy)?.label
               : "Default..."}
@@ -221,6 +228,9 @@ export default function TutorFilters({ categories }: TutorFiltersProps) {
             onClick={() => setOrderOpen((prev) => !prev)}
             className="w-full border rounded-md px-3 py-2 text-left bg-background"
           >
+            <div className="absolute right-3 top-10">
+              {orderOpen ? <IoIosArrowUp /> : <IoIosArrowDown />}
+            </div>
             {sortOrder === "desc" ? "Descending" : "Ascending"}
           </button>
 

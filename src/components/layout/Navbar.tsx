@@ -21,6 +21,8 @@ import {
 } from "@/components/ui/sheet";
 import Link from "next/link";
 import { ModeToggle } from "./ModeToggle";
+import { authClient } from "@/lib/auth-client";
+import { DropdownMenuAvatar } from "./DropdownMenuAvatar";
 
 interface MenuItem {
   title: string;
@@ -62,8 +64,8 @@ const Navbar = ({
   menu = [
     { title: "Home", url: "/" },
     {
-      title: "Blogs",
-      url: "/blogs",
+      title: "Tutors",
+      url: "/tutors",
     },
     {
       title: "About",
@@ -80,6 +82,15 @@ const Navbar = ({
   },
   className,
 }: Navbar1Props) => {
+  const {
+    data: session,
+    isPending, //loading state
+    error, //error object
+    refetch, //refetch the session
+  } = authClient.useSession();
+  // console.log(session);
+  // console.log("navbar");
+
   return (
     <section className={cn("py-4 ", className)}>
       <div className="container mx-auto px-4">
@@ -107,12 +118,18 @@ const Navbar = ({
           </div>
           <div className="flex gap-2">
             <ModeToggle />
-            <Button asChild variant="outline" size="sm">
-              <Link href={auth.login.url}>{auth.login.title}</Link>
-            </Button>
-            <Button asChild size="sm">
-              <Link href={auth.signup.url}>{auth.signup.title}</Link>
-            </Button>
+            {session?.user ? (
+              <DropdownMenuAvatar session={session} />
+            ) : (
+              <div className="flex gap-2">
+                <Button asChild variant="outline" size="sm">
+                  <Link href={auth.login.url}>{auth.login.title}</Link>
+                </Button>
+                <Button asChild size="sm">
+                  <Link href={auth.signup.url}>{auth.signup.title}</Link>
+                </Button>
+              </div>
+            )}
           </div>
         </nav>
 

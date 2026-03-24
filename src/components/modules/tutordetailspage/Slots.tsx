@@ -15,6 +15,8 @@ import { toast } from "sonner";
 import * as z from "zod";
 import { FieldError } from "@/components/ui/field";
 import { bookSlot } from "@/actions/booking.action";
+import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 interface SlotsProps {
   slots: TutorSlot[];
@@ -35,6 +37,15 @@ const Slots: React.FC<SlotsProps> = ({ slots, subjects }) => {
 
   const availableSlots = slots.filter((slot) => !slot.isBooked);
 
+  const {
+    data: session,
+    isPending, //loading state
+    error, //error object
+    refetch, //refetch the session
+  } = authClient.useSession();
+
+  const router = useRouter();
+
   const form = useForm({
     defaultValues: {
       slotId: "",
@@ -47,7 +58,11 @@ const Slots: React.FC<SlotsProps> = ({ slots, subjects }) => {
     onSubmit: async ({ value, formApi }) => {
       const toastId = toast.loading("Posing your booking...");
       try {
-        console.log("Form Data:", value);
+        // console.log("Form Data:", value);
+        if (!session?.user) {
+          toast.error("Unauthorized....Please Login...", { id: toastId });
+          router.push("/login");
+        }
         const res = await bookSlot(value);
         if (res.error) {
           toast.error(

@@ -1,10 +1,14 @@
 import { tutorService } from "@/services/tutor.service";
 import Slots from "@/components/modules/tutordetailspage/Slots";
-import Reviews, { dummyReviews } from "@/components/modules/tutordetailspage/Reviews";
+import Reviews, {
+  dummyReviews,
+} from "@/components/modules/tutordetailspage/Reviews";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Star, MapPin, Clock, DollarSign } from "lucide-react";
 import { Tutor, TutorSubject } from "@/types/tutor.type";
+import { authClient } from "@/lib/auth-client";
+import { getUserInServer } from "@/actions/auth-server";
 
 export default async function TutorDetailPage({
   params,
@@ -14,7 +18,10 @@ export default async function TutorDetailPage({
   const { tutorId } = await params;
   const { data: tutor, error } = await tutorService.getTutorById(tutorId);
 
-  console.log(tutor);
+  // const session = await getUserInServer();
+  // console.log(session);
+
+  // console.log(tutor);
 
   if (error || !tutor) {
     return (
@@ -30,7 +37,8 @@ export default async function TutorDetailPage({
     );
   }
 
-  const displayReviews = tutor.reviews && tutor.reviews.length > 0 ? tutor.reviews : dummyReviews;
+  const displayReviews =
+    tutor.reviews && tutor.reviews.length > 0 ? tutor.reviews : dummyReviews;
 
   return (
     <div className="container mx-auto py-8 px-4">
@@ -46,8 +54,12 @@ export default async function TutorDetailPage({
                     className="w-24 h-24 rounded-full object-cover border-2 border-primary/20"
                   />
                   <div>
-                    <CardTitle className="text-2xl mb-2">{tutor.user.name}</CardTitle>
-                    <p className="text-muted-foreground mb-1">{tutor.headline}</p>
+                    <CardTitle className="text-2xl mb-2">
+                      {tutor.user.name}
+                    </CardTitle>
+                    <p className="text-muted-foreground mb-1">
+                      {tutor.headline}
+                    </p>
                     <div className="flex items-center gap-2 mb-2">
                       <div className="flex items-center">
                         {Array.from({ length: 5 }, (_, index) => (
@@ -87,7 +99,9 @@ export default async function TutorDetailPage({
                   <Clock className="w-5 h-5 text-primary" />
                   <div>
                     <p className="text-sm text-muted-foreground">Experience</p>
-                    <p className="font-semibold">{tutor.experienceYears} years</p>
+                    <p className="font-semibold">
+                      {tutor.experienceYears} years
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
