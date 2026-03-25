@@ -16,6 +16,7 @@ import {
   LogOutIcon,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export function DropdownMenuAvatar({ session }) {
   const router = useRouter();
@@ -47,8 +48,11 @@ export function DropdownMenuAvatar({ session }) {
       <DropdownMenuContent align="end">
         <DropdownMenuGroup>
           <DropdownMenuItem>
+            <Link href={"/account"} className="flex gap-2 items-center justify-center">
             <BadgeCheckIcon />
             Account
+            </Link>
+            
           </DropdownMenuItem>
           {/* <DropdownMenuItem>
             <CreditCardIcon />

@@ -87,6 +87,26 @@ export const tutorService = {
     }
   },
 
+  getTutorByUserId: async function (userId: string) {
+    try {
+      const url = new URL(`${process.env.API_URL}/api/tutor-profile/${userId}`);
+
+      const res = await fetch(url.toString(), {
+        cache: "no-store",
+      });
+
+      const data = await res.json();
+      console.log(data);
+
+      if (data?.tutorProfile) {
+        return { data: data.tutorProfile, error: null };
+      }
+      return { data: null, error: { message: "No tutor profile found" } };
+    } catch (err) {
+      return { data: null, error: { message: "Something Went Wrong" } };
+    }
+  },
+
   getCategories: async function () {
     try {
       const res = await fetch(`${process.env.API_URL}/api/categories`, {
