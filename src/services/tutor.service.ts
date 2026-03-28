@@ -2,6 +2,9 @@
 //* { cache: no-store } : SSR -> Dynamic Page
 //* next: { revalidate: 10 } : ISR -> Mix between static and dynamic
 
+import { Tutor } from "@/types/tutor.type";
+import { cookies } from "next/headers";
+
 interface ServiceOptions {
   cache?: RequestCache;
   revalidate?: number;
@@ -96,7 +99,7 @@ export const tutorService = {
       });
 
       const data = await res.json();
-      console.log(data);
+      // console.log(data);
 
       if (data?.tutorProfile) {
         return { data: data.tutorProfile, error: null };
@@ -120,6 +123,34 @@ export const tutorService = {
       }
       console.log(data);
       return { data: data.data, error: null };
+    } catch (err) {
+      return { data: null, error: { message: "Something Went Wrong" } };
+    }
+  },
+
+  updateTutor: async function (id: string, data: Partial<Tutor>) {
+    try {
+       const cookieStore = await cookies();
+      const res = await fetch(`${process.env.API_URL}/api/tutor-profile/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+           Cookie: cookieStore.toString(),
+        },
+        body: JSON.stringify(data),
+        cache: "no-store",
+      });
+
+      const responseData = await res.json();
+
+      if (!responseData.success) {
+        return {
+          data: null,
+          error: { message: responseData.message || "Failed to update tutor profile" },
+        };
+      }
+
+      return { data: responseData.tutorProfile, error: null };
     } catch (err) {
       return { data: null, error: { message: "Something Went Wrong" } };
     }

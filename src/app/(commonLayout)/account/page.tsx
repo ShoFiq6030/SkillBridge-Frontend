@@ -16,11 +16,12 @@ import Link from "next/link";
 export default async function AccountPage({
   searchParams,
 }: {
-  searchParams: Promise<{ section?: string | undefined }>;
+  searchParams: Promise<{ section?: string | undefined; editModal?: boolean }>;
 }) {
   const session = await getUserInServer();
   const params = await searchParams;
   let section = params.section;
+  const isModalOpen = params.editModal || false;
   if (!section) {
     section = "profile";
   }
@@ -56,6 +57,7 @@ export default async function AccountPage({
       tutorData = result.data;
     }
   }
+  // console.log(isModalOpen);
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -84,7 +86,10 @@ export default async function AccountPage({
           {section === "profile" && <ProfileSection user={user} />}
           {section === "password" && <PasswordResetSection />}
           {section === "tutor-profile" && isTutor && tutorData && (
-            <TutorProfileSection tutor={tutorData} />
+            <TutorProfileSection 
+              tutor={tutorData} 
+              isModalOpen={isModalOpen} 
+            />
           )}
           {section === "tutor-profile" && isTutor && !tutorData && (
             <Card>
