@@ -2,6 +2,7 @@
 //* { cache: no-store } : SSR -> Dynamic Page
 //* next: { revalidate: 10 } : ISR -> Mix between static and dynamic
 
+import { env } from "@/env";
 import { Tutor } from "@/types/tutor.type";
 import { cookies } from "next/headers";
 
@@ -35,7 +36,7 @@ export const tutorService = {
     options?: ServiceOptions,
   ) {
     try {
-      const url = new URL(`${process.env.API_URL}/api/tutor-profile/list`);
+      const url = new URL(`${env.API_URL}/api/tutor-profile/list`);
 
       if (params) {
         Object.entries(params).forEach(([key, value]) => {
@@ -73,7 +74,7 @@ export const tutorService = {
   getTutorById: async function (id: string) {
     try {
       const res = await fetch(
-        `${process.env.API_URL}/api/tutor-profile/${id}`,
+        `${env.API_URL}/api/tutor-profile/tutor/${id}`,
         {
           cache: "no-store",
           next: {
@@ -92,7 +93,7 @@ export const tutorService = {
 
   getTutorByUserId: async function (userId: string) {
     try {
-      const url = new URL(`${process.env.API_URL}/api/tutor-profile/${userId}`);
+      const url = new URL(`${env.API_URL}/api/tutor-profile/${userId}`);
 
       const res = await fetch(url.toString(), {
         cache: "no-store",
@@ -112,7 +113,7 @@ export const tutorService = {
 
   getCategories: async function () {
     try {
-      const res = await fetch(`${process.env.API_URL}/api/categories`, {
+      const res = await fetch(`${env.API_URL}/api/categories`, {
         cache: "force-cache",
         next: { revalidate: 60, tags: ["categories"] },
       });
@@ -131,7 +132,7 @@ export const tutorService = {
   updateTutor: async function (id: string, data: Partial<Tutor>) {
     try {
        const cookieStore = await cookies();
-      const res = await fetch(`${process.env.API_URL}/api/tutor-profile/${id}`, {
+      const res = await fetch(`${env.API_URL}/api/tutor-profile/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

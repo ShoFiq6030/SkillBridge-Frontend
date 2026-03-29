@@ -24,6 +24,7 @@ import { Label } from "@/components/ui/label";
 
 import { toast } from "sonner";
 import * as z from "zod";
+import { env } from "@/env";
 
 const formSchema = z.object({
   name: z.string().min(1, "This field is required"),
@@ -62,7 +63,7 @@ export function RegisterForm({ ...props }: React.ComponentProps<typeof Card>) {
       try {
         const { data, error } = await authClient.signUp.email({
           ...value,
-          callbackURL: `${process.env.NEXT_PUBLIC_FRONTEND_URL}/login`,
+          callbackURL: `${env.NEXT_PUBLIC_FRONTEND_URL}/login`,
         });
 
         if (error) {

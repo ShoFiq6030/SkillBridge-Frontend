@@ -23,6 +23,7 @@ import { useForm } from "@tanstack/react-form";
 import { toast } from "sonner";
 import * as z from "zod";
 import { useState } from "react";
+import { env } from "@/env";
 
 const formSchema = z.object({
   password: z.string().min(8, "Minimum length is 8"),
@@ -53,7 +54,7 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
       try {
         const { data, error } = await authClient.signIn.email({
           ...value,
-          callbackURL: process.env.NEXT_PUBLIC_FRONTEND_URL,
+          callbackURL:env.NEXT_PUBLIC_FRONTEND_URL,
         });
         console.log(data);
 

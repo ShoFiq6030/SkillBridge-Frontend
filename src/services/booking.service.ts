@@ -1,3 +1,4 @@
+import { env } from "@/env";
 import { cookies } from "next/headers";
 
 export interface BookingData {
@@ -10,7 +11,7 @@ export const bookingService = {
   bookSlot: async function (bookingData: BookingData) {
     try {
       const cookieStore = await cookies();
-      const res = await fetch(`${process.env.API_URL}/api/booking`, {
+      const res = await fetch(`${env.API_URL}/api/booking`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
