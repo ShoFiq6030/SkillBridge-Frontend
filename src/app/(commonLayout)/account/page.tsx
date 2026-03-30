@@ -1,4 +1,3 @@
-import { getUserInServer } from "@/actions/auth-server";
 import { Roles } from "@/constants/roles";
 import { redirect } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,6 +10,7 @@ import {
 } from "@/components/modules/accountPage";
 import { tutorService } from "@/services/tutor.service";
 import Link from "next/link";
+import { userService } from "@/services/user.service";
 
 // Main Account Page Component
 export default async function AccountPage({
@@ -18,7 +18,7 @@ export default async function AccountPage({
 }: {
   searchParams: Promise<{ section?: string | undefined; editModal?: boolean }>;
 }) {
-  const session = await getUserInServer();
+  const session = await userService.getSession();
   const params = await searchParams;
   let section = params.section;
   const isModalOpen = params.editModal || false;
