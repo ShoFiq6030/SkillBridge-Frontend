@@ -261,4 +261,87 @@ export const tutorService = {
       return { data: null, error: { message: "Something Went Wrong" } };
     }
   },
+
+  deleteSlot: async function (slotId: string) {
+    try {
+      const cookieStore = await cookies();
+      const res = await fetch(`${env.API_URL}/api/availability-slot/${slotId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieStore.toString(),
+        },
+        cache: "no-store",
+      });
+      const responseData = await res.json();
+
+      if (!responseData.success) {
+        return {
+          data: null,
+          error: {
+            message: responseData.message || "Failed to delete slot",
+          },
+        };
+      }
+      return { data: true, error: null };
+    } catch (err) {
+      return { data: null, error: { message: "Something Went Wrong" } };
+    }
+  },
+
+  updateSlot: async function (slotId: string, startAt: string, endAt: string) {
+    try {
+      const cookieStore = await cookies();
+      const res = await fetch(`${env.API_URL}/api/availability-slot/${slotId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieStore.toString(),
+        },
+        body: JSON.stringify({ startAt, endAt }),
+        cache: "no-store",
+      });
+      const responseData = await res.json();
+
+      if (!responseData.success) {
+        return {
+          data: null,
+          error: {
+            message: responseData.message || "Failed to update slot",
+          },
+        };
+      }
+      return { data: responseData.data, error: null };
+    } catch (err) {
+      return { data: null, error: { message: "Something Went Wrong" } };
+    }
+  },
+
+  addSlot: async function (startAt: string, endAt: string) {
+    try {
+      const cookieStore = await cookies();
+      const res = await fetch(`${env.API_URL}/api/availability-slot`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieStore.toString(),
+        },
+        body: JSON.stringify({ startAt, endAt }),
+        cache: "no-store",
+      });
+      const responseData = await res.json();
+
+      if (!responseData.success) {
+        return {
+          data: null,
+          error: {
+            message: responseData.error || "Failed to add slot",
+          },
+        };
+      }
+      return { data: responseData.data, error: null };
+    } catch (err) {
+      return { data: null, error: { message: "Something Went Wrong" } };
+    }
+  },
 };

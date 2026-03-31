@@ -81,3 +81,63 @@ export const createCategory = async (
     };
   }
 };
+
+export const deleteSlot = async (
+  slotId: string,
+) => {
+  try {
+    
+    const res = await tutorService.deleteSlot(slotId);
+    updateTag("tutor-profile-auth");
+    if (res.data===null) {
+        return { data: null, error: { message: res.error?.message || "Failed to delete slot" } };
+    }
+    return { data: res, error: null };
+  } catch (err: any) {
+    return {
+      data: null,
+      error: { message: err.message || "Something Went Wrong" },
+    };
+  }
+};
+
+export const updateSlot = async (
+  slotId: string,
+  startAt: string,
+  endAt: string,
+) => {
+  try {
+    
+    const res = await tutorService.updateSlot(slotId, startAt, endAt);
+    updateTag("tutor-profile-auth");
+    if (res.data===null) {
+        return { data: null, error: { message: res.error?.message || "Failed to update slot" } };
+    }
+    return { data: res, error: null };
+  } catch (err: any) {
+    return {
+      data: null,
+      error: { message: err.message || "Something Went Wrong" },
+    };
+  }
+};
+
+export const addSlot = async (
+  startAt: string,
+  endAt: string,
+) => {
+  try {
+    
+    const res = await tutorService.addSlot(startAt, endAt);
+    updateTag("tutor-profile-auth");
+    if (res.data===null) {
+        return { data: null, error: { message: res.error?.message || "Failed to add slot" } };
+    }
+    return { data: res, error: null };
+  } catch (err: any) {
+    return {
+      data: null,
+      error: { message: err.message || "Something Went Wrong" },
+    };
+  }
+};
