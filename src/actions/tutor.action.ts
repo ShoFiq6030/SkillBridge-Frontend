@@ -2,7 +2,7 @@
 import { tutorService } from "@/services/tutor.service";
 import { Tutor } from "@/types/tutor.type";
 import { updateTag } from "next/cache";
-import { nullish } from "zod";
+
 
 export const updateTutorProfile = async (
   tutorId: string,
@@ -14,6 +14,64 @@ export const updateTutorProfile = async (
     updateTag("tutor-profile");
     if (res.data===null) {
         return { data: null, error: { message: res.error?.message || "Failed to update tutor profile" } };
+    }
+    return { data: res, error: null };
+  } catch (err: any) {
+    return {
+      data: null,
+      error: { message: err.message || "Something Went Wrong" },
+    };
+  }
+};
+export const deleteSubject = async (
+  subjectId: string,
+  
+) => {
+  try {
+    
+    const res = await tutorService.deleteSubject(subjectId);
+    updateTag("tutor-profile-auth");
+    if (res.data===null) {
+        return { data: null, error: { message: res.error?.message || "Failed to update tutor profile" } };
+    }
+    return { data: res, error: null };
+  } catch (err: any) {
+    return {
+      data: null,
+      error: { message: err.message || "Something Went Wrong" },
+    };
+  }
+};
+export const addSubject = async (
+  subjectId: string,
+  
+) => {
+  try {
+    
+    const res = await tutorService.addSubject(subjectId);
+    updateTag("tutor-profile-auth");
+    if (res.data===null) {
+        return { data: null, error: { message: res.error?.message || "Failed to update tutor profile" } };
+    }
+    return { data: res, error: null };
+  } catch (err: any) {
+    return {
+      data: null,
+      error: { message: err.message || "Something Went Wrong" },
+    };
+  }
+};
+
+export const createCategory = async (
+  name: string,
+  slug: string,
+) => {
+  try {
+    
+    const res = await tutorService.createCategory(name, slug);
+    updateTag("categories");
+    if (res.data===null) {
+        return { data: null, error: { message: res.error?.message || "Failed to create category" } };
     }
     return { data: res, error: null };
   } catch (err: any) {

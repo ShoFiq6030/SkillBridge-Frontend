@@ -1,3 +1,18 @@
+export interface Booking {
+  id: string;
+  tutorProfileId: string;
+  studentId: string;
+  slotId: string;
+  tutorSubjectId: string;
+  status: "PENDING" | "CONFIRMED" | "CANCELLED" | "COMPLETED";
+  note?: string;
+  createdAt: string;
+  updatedAt: string;
+  slot?: TutorSlot;
+  tutorSubject?: TutorSubject;
+  student?: User;
+}
+
 export interface Tutor {
   id: string;
   userId: string;
@@ -16,6 +31,7 @@ export interface Tutor {
   subjects: TutorSubject[];
   slots: TutorSlot[];
   reviews: Review[];
+  bookings: Booking[];
 }
 
 export interface User {
@@ -53,9 +69,13 @@ export interface TutorSlot {
 }
 
 export interface Review {
-  id?: string;
-  rating?: number;
-  comment?: string;
-  userId?: string;
-  createdAt?: string;
+  id: string;
+  tutorProfileId: string;
+  studentId: string;
+  bookingId: string;
+  rating: number;
+  comment: string;
+  createdAt: string;
+  updatedAt: string;
+  student?: User;
 }

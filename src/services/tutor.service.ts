@@ -31,10 +31,7 @@ export interface TutorsParams {
 }
 
 export const tutorService = {
-  getTutors: async function (
-    params?: TutorsParams,
-    options?: ServiceOptions,
-  ) {
+  getTutors: async function (params?: TutorsParams, options?: ServiceOptions) {
     try {
       const url = new URL(`${env.API_URL}/api/tutor-profile/list`);
 
@@ -73,15 +70,12 @@ export const tutorService = {
 
   getTutorById: async function (id: string) {
     try {
-      const res = await fetch(
-        `${env.API_URL}/api/tutor-profile/tutor/${id}`,
-        {
-          cache: "no-store",
-          next: {
-            tags: ["tutor-profile"],
-          },
+      const res = await fetch(`${env.API_URL}/api/tutor-profile/tutor/${id}`, {
+        cache: "no-store",
+        next: {
+          tags: ["tutor-profile"],
         },
-      );
+      });
 
       const data = await res.json();
 
@@ -101,6 +95,35 @@ export const tutorService = {
 
       const data = await res.json();
       // console.log(data);
+
+      if (data?.tutorProfile) {
+        return { data: data.tutorProfile, error: null };
+      }
+      return { data: null, error: { message: "No tutor profile found" } };
+    } catch (err) {
+      return { data: null, error: { message: "Something Went Wrong" } };
+    }
+  },
+  getTutorByUserIdAuth: async function (userId: string) {
+    try {
+      const cookieStore = await cookies();
+      const url = new URL(
+        `${env.API_URL}/api/tutor-profile/tutor/auth/${userId}`,
+      );
+
+      const res = await fetch(url.toString(), {
+        cache: "no-store",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieStore.toString(),
+        },
+        next: {
+          tags: ["tutor-profile-auth"],
+        },
+      });
+
+      const data = await res.json();
+      console.log(data);
 
       if (data?.tutorProfile) {
         return { data: data.tutorProfile, error: null };
@@ -131,12 +154,12 @@ export const tutorService = {
 
   updateTutor: async function (id: string, data: Partial<Tutor>) {
     try {
-       const cookieStore = await cookies();
+      const cookieStore = await cookies();
       const res = await fetch(`${env.API_URL}/api/tutor-profile/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-           Cookie: cookieStore.toString(),
+          Cookie: cookieStore.toString(),
         },
         body: JSON.stringify(data),
         cache: "no-store",
@@ -147,11 +170,93 @@ export const tutorService = {
       if (!responseData.success) {
         return {
           data: null,
-          error: { message: responseData.message || "Failed to update tutor profile" },
+          error: {
+            message: responseData.message || "Failed to update tutor profile",
+          },
         };
       }
 
       return { data: responseData.tutorProfile, error: null };
+    } catch (err) {
+      return { data: null, error: { message: "Something Went Wrong" } };
+    }
+  },
+
+  deleteSubject: async function (id: string) {
+    try {
+      const cookieStore = await cookies();
+      const res = await fetch(`${env.API_URL}/api/tutor-subject/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieStore.toString(),
+        },
+        cache: "no-store",
+      });
+      const responseData = await res.json();
+
+      if (!responseData.success) {
+        return {
+          data: null,
+          error: {
+            message: responseData.message || "Something Went Wrong",
+          },
+        };
+      }
+      return { data: true, error: null };
+    } catch (err) {
+      return { data: null, error: { message: "Something Went Wrong" } };
+    }
+  },
+  addSubject: async function (id: string) {
+    try {
+      const cookieStore = await cookies();
+      const res = await fetch(`${env.API_URL}/api/tutor-subject`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieStore.toString(),
+        },
+        body: JSON.stringify({ categoryId: id }),
+      });
+      const responseData = await res.json();
+
+      if (!responseData.success) {
+        return {
+          data: null,
+          error: {
+            message: responseData.message || "Something Went Wrong",
+          },
+        };
+      }
+      return { data: true, error: null };
+    } catch (err) {
+      return { data: null, error: { message: "Something Went Wrong" } };
+    }
+  },
+
+  createCategory: async function (name: string, slug: string) {
+    try {
+      const cookieStore = await cookies();
+      const res = await fetch(`${env.API_URL}/api/categories`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieStore.toString(),
+        },
+        body: JSON.stringify({ name, slug }),
+      });
+      const responseData = await res.json();
+
+      if (!responseData.success) {
+        return {
+          data: null,
+          error: {
+            message: responseData.message || "Failed to create category",
+          },
+        };
+      }
+      return { data: responseData.data, error: null };
     } catch (err) {
       return { data: null, error: { message: "Something Went Wrong" } };
     }

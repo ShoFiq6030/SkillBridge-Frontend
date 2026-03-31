@@ -1,7 +1,7 @@
 import { tutorService } from "@/services/tutor.service";
 import { Tutor } from "@/types";
 import TutorCard from "../../layout/TutorCard";
-import Link  from 'next/link';
+import Link from "next/link";
 
 export default async function PopularTutorSection() {
   const { data, error } = await tutorService.getTutors(
@@ -15,7 +15,7 @@ export default async function PopularTutorSection() {
       revalidate: 60, // Revalidate every 60 seconds
     },
   );
-  console.log(data);
+  // console.log(data);
 
   return (
     <section className="bg-[#f5f3f1] dark:bg-neutral-900 px-6 py-16 md:px-10 lg:px-16 lg:py-20 rounded-4xl">
@@ -60,7 +60,8 @@ export default async function PopularTutorSection() {
         <div className="mt-10 flex justify-center">
           <Link
             href="/tutors"
-           className="inline-flex items-center rounded-full bg-[#ff7a3d] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-orange-200 dark:shadow-none transition hover:translate-y-px hover:bg-[#f06f33]">
+            className="inline-flex items-center rounded-full bg-[#ff7a3d] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-orange-200 dark:shadow-none transition hover:translate-y-px hover:bg-[#f06f33]"
+          >
             Browse More →
           </Link>
         </div>
