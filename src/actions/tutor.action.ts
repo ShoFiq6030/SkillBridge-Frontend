@@ -2,7 +2,7 @@
 import { tutorService } from "@/services/tutor.service";
 import { Tutor } from "@/types/tutor.type";
 import { updateTag } from "next/cache";
-
+import { bookingService } from "@/services/booking.service";
 
 export const updateTutorProfile = async (
   tutorId: string,
@@ -141,3 +141,31 @@ export const addSlot = async (
     };
   }
 };
+
+export async function updateBookingStatusAction(
+  bookingId: string,
+  status: "CONFIRMED" | "COMPLETED" | "CANCELLED"
+) {
+  try {
+    const result = await bookingService.updateBookingStatus(bookingId, status);
+    
+    if (result.error) {
+      return {
+        success: false,
+        error: result.error.message || "Failed to update booking status",
+      };
+    }
+    
+     updateTag("tutor-profile-auth");
+
+    return {
+      success: true,
+      message: `Booking ${status.toLowerCase()} successfully`,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: "Failed to update booking status",
+    };
+  }
+}
