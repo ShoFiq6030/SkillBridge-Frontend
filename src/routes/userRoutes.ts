@@ -5,13 +5,10 @@ export const userRoutes: Route[] = [
     title: "User Dashboard",
     items: [
       {
-        title: "Create Blog",
-        url: "/dashboard/create-blog",
+        title: "Dashboard Home",
+        url: "/dashboard/user-dashboard",
       },
-      {
-        title: "History",
-        url: "/dashboard/history",
-      },
+     
     ],
   },
 ];

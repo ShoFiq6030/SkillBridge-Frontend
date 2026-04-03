@@ -63,6 +63,7 @@ export interface TutorSlot {
   tutorProfileId: string;
   startAt: string;
   endAt: string;
+  duration: number; 
   isBooked: boolean;
   createdAt: string;
   updatedAt: string;

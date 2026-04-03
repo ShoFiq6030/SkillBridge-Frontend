@@ -26,7 +26,9 @@ export default async function TutorDashboard() {
   }
 
   const tutorDataResult = await tutorService.getTutorByUserIdAuth(userInfo.id);
-  console.log(tutorDataResult)
+  // console.log(tutorDataResult)
+  const {data:tutorStats}= await tutorService.getTutorStats();
+  console.log(tutorStats)
   
   if (tutorDataResult.error || !tutorDataResult.data) {
     return (
@@ -106,13 +108,11 @@ export default async function TutorDashboard() {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Today's Sessions</CardTitle>
+            <CardTitle className="text-sm font-medium">Total Sessions</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{todaySessions}</div>
-            <p className="text-xs text-muted-foreground">
-              {todaySessions === 0 ? "No sessions today" : `${todaySessions} session${todaySessions > 1 ? 's' : ''}`}
-            </p>
+            <div className="text-2xl font-bold">{tutorStats.totalBookings}</div>
+           
           </CardContent>
         </Card>
 
@@ -151,6 +151,24 @@ export default async function TutorDashboard() {
             <p className="text-xs text-muted-foreground">
               {tutorData.totalReviews} {tutorData.totalReviews === 1 ? 'review' : 'reviews'}
             </p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Complate Sessions</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{tutorStats.completedBookings}</div>
+           
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Earnings</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold ">{tutorStats.totalEarnings}$</div>
+           
           </CardContent>
         </Card>
       </div>

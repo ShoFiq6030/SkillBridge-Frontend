@@ -21,10 +21,6 @@ export const tutorRoutes: Route[] = [
         url: "/dashboard/tutor-dashboard/manage-bookings",
       },
 
-      {
-        title: "History",
-        url: "/dashboard/tutor-dashboard/history",
-      },
     ],
   },
 ];

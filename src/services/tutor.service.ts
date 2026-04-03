@@ -123,7 +123,7 @@ export const tutorService = {
       });
 
       const data = await res.json();
-      console.log(data);
+      // console.log(data);
 
       if (data?.tutorProfile) {
         return { data: data.tutorProfile, error: null };
@@ -265,14 +265,17 @@ export const tutorService = {
   deleteSlot: async function (slotId: string) {
     try {
       const cookieStore = await cookies();
-      const res = await fetch(`${env.API_URL}/api/availability-slot/${slotId}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Cookie: cookieStore.toString(),
+      const res = await fetch(
+        `${env.API_URL}/api/availability-slot/${slotId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Cookie: cookieStore.toString(),
+          },
+          cache: "no-store",
         },
-        cache: "no-store",
-      });
+      );
       const responseData = await res.json();
 
       if (!responseData.success) {
@@ -292,15 +295,18 @@ export const tutorService = {
   updateSlot: async function (slotId: string, startAt: string, endAt: string) {
     try {
       const cookieStore = await cookies();
-      const res = await fetch(`${env.API_URL}/api/availability-slot/${slotId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Cookie: cookieStore.toString(),
+      const res = await fetch(
+        `${env.API_URL}/api/availability-slot/${slotId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Cookie: cookieStore.toString(),
+          },
+          body: JSON.stringify({ startAt, endAt }),
+          cache: "no-store",
         },
-        body: JSON.stringify({ startAt, endAt }),
-        cache: "no-store",
-      });
+      );
       const responseData = await res.json();
 
       if (!responseData.success) {
@@ -342,6 +348,30 @@ export const tutorService = {
       return { data: responseData.data, error: null };
     } catch (err) {
       return { data: null, error: { message: "Something Went Wrong" } };
+    }
+  },
+  getTutorStats: async function () {
+    try {
+      const cookieStore = await cookies();
+      const res = await fetch(`${env.API_URL}/api/tutor-profile/statistics`, {
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieStore.toString(),
+        },
+        cache: "force-cache",
+        next: { revalidate: 60, tags: ["categories"] },
+      });
+      const data = await res.json();
+      if (!data.success) {
+        return { data: null, error: { massage: "something went wrong" } };
+      }
+
+      return { data:data.statistics, error: null };
+    } catch (e: any) {
+      return {
+        data: null,
+        error: { message: e.message || "Something Went Wrong" },
+      };
     }
   },
 };

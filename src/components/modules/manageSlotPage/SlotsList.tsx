@@ -35,12 +35,15 @@ export default function SlotsList({ tutorData }: { tutorData: Tutor }) {
     id?: string;
     startAt: string;
     endAt: string;
+    duration: number;
   } | null>(null);
+
 
   // Group slots by local date (YYYY-MM-DD)
   const slotsByDate = new Map<string, TutorSlot[]>();
+  const filterSlotData = tutorData.slots.filter((slot) => !slot.isBooked );
 
-  tutorData.slots.forEach((slot) => {
+  filterSlotData.forEach((slot) => {
     const slotDate = parseISO(slot.startAt);
     const dateKey = format(slotDate, "yyyy-MM-dd"); // local date
     if (!slotsByDate.has(dateKey)) {
@@ -50,14 +53,14 @@ export default function SlotsList({ tutorData }: { tutorData: Tutor }) {
   });
 
   // Get sorted dates (ascending)
-  const sortedDates = Array.from(slotsByDate.keys()).sort();
+  const sortedDates = Array.from(slotsByDate.keys()).sort()
 
   // Sort slots within each day by start time
   sortedDates.forEach((dateKey) => {
     const daySlots = slotsByDate.get(dateKey)!;
     daySlots.sort(
       (a, b) => new Date(a.startAt).getTime() - new Date(b.startAt).getTime(),
-    );
+    ).filter((slot)=> slot.isBooked!==true);
   });
 
   const weekDays = [
@@ -116,14 +119,15 @@ export default function SlotsList({ tutorData }: { tutorData: Tutor }) {
       id: slot.id,
       startAt: slot.startAt,
       endAt: slot.endAt,
+      duration: slot.duration
     });
     setModalOpen(true);
   };
 
   const handleModalSuccess = () => {
-    // The parent component will re-fetch data due to cache invalidation
-    // This callback can be used for additional actions if needed
   };
+
+
 
   return (
     <Card>
@@ -142,9 +146,11 @@ export default function SlotsList({ tutorData }: { tutorData: Tutor }) {
         </div>
       </CardHeader>
       <CardContent>
+      
         <div className="space-y-6">
           {sortedDates.length > 0 ? (
             sortedDates.map((dateKey) => {
+           
               const daySlots = slotsByDate.get(dateKey)!;
               const firstSlot = daySlots[0];
               const dateObj = parseISO(firstSlot.startAt);
@@ -154,10 +160,10 @@ export default function SlotsList({ tutorData }: { tutorData: Tutor }) {
                 <div key={dateKey} className="border rounded-lg p-4">
                   <h3 className="font-medium mb-3">{formattedDate}</h3>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    {daySlots.map((slot) => (
+                    {daySlots.filter((slot)=>!slot.isBooked).map((slot) => (
                       <div
                         key={slot.id}
-                        className={`flex items-center  justify-between py-3 px-3 rounded-lg border ${
+                        className={`flex items-center w-74  justify-between py-3 px-3 rounded-lg border ${
                           slot.isBooked
                             ? "bg-yellow-50 border-yellow-200 dark:bg-yellow-900/10 dark:border-yellow-700"
                             : "bg-green-50 border-green-200 dark:bg-green-900/10 dark:border-green-700"
@@ -166,6 +172,9 @@ export default function SlotsList({ tutorData }: { tutorData: Tutor }) {
                         <div className="flex-1">
                           <span className="text-sm font-medium text-nowrap">
                             {formatTimeRange(slot.startAt, slot.endAt)}
+                          </span>
+                          <span className="text-xs text-muted-foreground ml-2">
+                            {slot.duration}{ slot.duration === 1 ? "hour" : "hours" }
                           </span>
                           {slot.isBooked && (
                             <span className="ml-2 px-2 py-1 text-xs bg-yellow-100 text-yellow-800 rounded-full">
@@ -198,6 +207,7 @@ export default function SlotsList({ tutorData }: { tutorData: Tutor }) {
                       </div>
                     ))}
                   </div>
+                  <p>{}</p>
                 </div>
               );
             })
