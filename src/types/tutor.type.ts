@@ -39,6 +39,12 @@ export interface User {
   email: string;
   name: string;
   image: string;
+  emailVerified: boolean;
+  createdAt: string;
+  updatedAt: string;
+  role: "ADMIN" | "TUTOR" | "USER";
+  status?: string;
+
 }
 
 export interface TutorSubject {

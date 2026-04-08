@@ -24,6 +24,7 @@ import { ModeToggle } from "./ModeToggle";
 import { authClient } from "@/lib/auth-client";
 import { DropdownMenuAvatar } from "./DropdownMenuAvatar";
 
+
 interface MenuItem {
   title: string;
   url: string;
@@ -71,10 +72,7 @@ const Navbar = ({
       title: "About",
       url: "/about",
     },
-    {
-      title: "Dashboard",
-      url: "/dashboard",
-    },
+   
   ],
   auth = {
     login: { title: "Login", url: "/login" },
@@ -90,6 +88,7 @@ const Navbar = ({
   } = authClient.useSession();
   // console.log(session);
   // console.log("navbar");
+  const user  = session?.user
 
   return (
     <section className={cn("py-4 ", className)}>
@@ -118,8 +117,13 @@ const Navbar = ({
           </div>
           <div className="flex gap-2">
             <ModeToggle />
-            {session?.user ? (
-              <DropdownMenuAvatar session={session} />
+
+            {isPending ? (
+              <div className="flex items-center gap-2">
+                <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+              </div>
+            ) :    user ? (
+              <DropdownMenuAvatar user={ user} />
             ) : (
               <div className="flex gap-2">
                 <Button asChild variant="outline" size="sm">
@@ -130,6 +134,7 @@ const Navbar = ({
                 </Button>
               </div>
             )}
+         
           </div>
         </nav>
 

@@ -19,44 +19,29 @@ export async function proxy(request: NextRequest) {
   if (!isAuthenticated && pathname !== "/login") {
     return NextResponse.redirect(new URL("/login", request.url));
   }
-
-  if (pathname === "/dashboard") {
-    if (role === Roles.admin) {
-      return NextResponse.redirect(
-        new URL("/dashboard/admin-dashboard", request.url),
-      );
-    }
-    if (role === Roles.tutor) {
-      return NextResponse.redirect(
-        new URL("/dashboard/tutor-dashboard", request.url),
-      );
-    }
-    return NextResponse.redirect(
-      new URL("/dashboard/user-dashboard", request.url),
-    );
-  }
-
-  // Prevent cross-role access
+  // Admin access control
   if (
-    (role === Roles.admin &&
-      pathname.startsWith("/dashboard/tutor-dashboard")) ||
-    pathname.startsWith("/dashboard/user-dashboard")
+    role === Roles.admin &&
+    (pathname.startsWith("/dashboard/tutor-dashboard") ||
+      pathname.startsWith("/dashboard/user-dashboard"))
   ) {
     return NextResponse.redirect(
       new URL("/dashboard/admin-dashboard", request.url),
     );
   }
 
+  // Tutor access control
   if (
-    (role === Roles.tutor &&
-      pathname.startsWith("/dashboard/admin-dashboard")) ||
-    pathname.startsWith("/dashboard/user-dashboard")
+    role === Roles.tutor &&
+    (pathname.startsWith("/dashboard/admin-dashboard") ||
+      pathname.startsWith("/dashboard/user-dashboard"))
   ) {
     return NextResponse.redirect(
       new URL("/dashboard/tutor-dashboard", request.url),
     );
   }
 
+  // User access control
   if (
     role === Roles.user &&
     (pathname.startsWith("/dashboard/admin-dashboard") ||

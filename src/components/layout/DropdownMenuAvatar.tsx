@@ -1,3 +1,4 @@
+"use client"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth-client";
@@ -17,8 +18,12 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { User } from "@/types";
 
-export function DropdownMenuAvatar({ session }) {
+
+
+
+export function DropdownMenuAvatar({ user }:  { user: User }) {
   const router = useRouter();
   const handleSignOut = async () => {
     await authClient.signOut({
@@ -29,8 +34,13 @@ export function DropdownMenuAvatar({ session }) {
       },
     });
   };
-  const user = session.user;
   // console.log(user);
+  const dashboardLink =
+    user.role === "ADMIN"
+      ? "/dashboard/admin-dashboard"
+      : user.role === "TUTOR"
+        ? "/dashboard/tutor-dashboard"
+        : "/dashboard/user-dashboard";
 
   return (
     <DropdownMenu>
@@ -48,20 +58,27 @@ export function DropdownMenuAvatar({ session }) {
       <DropdownMenuContent align="end">
         <DropdownMenuGroup>
           <DropdownMenuItem>
-            <Link href={"/account"} className="flex gap-2 items-center justify-center">
-            <BadgeCheckIcon />
-            Account
+            <Link
+              href={"/account"}
+              className="flex gap-2 items-center justify-center"
+            >
+              <BadgeCheckIcon />
+              Account
             </Link>
-            
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            <Link
+              href={dashboardLink}
+              className="flex gap-2 items-center justify-center"
+            >
+              <CreditCardIcon />
+              Dashboard
+            </Link>
           </DropdownMenuItem>
           {/* <DropdownMenuItem>
-            <CreditCardIcon />
-            Billing
-          </DropdownMenuItem> */}
-          <DropdownMenuItem>
             <BellIcon />
             Notifications
-          </DropdownMenuItem>
+          </DropdownMenuItem> */}
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer">
