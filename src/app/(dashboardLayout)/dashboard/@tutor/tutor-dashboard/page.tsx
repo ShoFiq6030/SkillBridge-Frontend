@@ -28,7 +28,7 @@ export default async function TutorDashboard() {
   const tutorDataResult = await tutorService.getTutorByUserIdAuth(userInfo.id);
   // console.log(tutorDataResult)
   const {data:tutorStats}= await tutorService.getTutorStats();
-  console.log(tutorStats)
+  // console.log(tutorStats)
   
   if (tutorDataResult.error || !tutorDataResult.data) {
     return (

@@ -16,6 +16,7 @@ export default async function PopularTutorSection() {
     },
   );
   // console.log(data);
+  const tutors: Tutor[] = data.data;
 
   return (
     <section className="bg-[#f5f3f1] dark:bg-neutral-900 px-6 py-16 md:px-10 lg:px-16 lg:py-20 rounded-4xl">
@@ -52,9 +53,19 @@ export default async function PopularTutorSection() {
         </div>
 
         <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-          {data.data.map((tutor: Tutor) => (
-            <TutorCard key={tutor.id} tutor={tutor} />
-          ))}
+          {tutors.length === 0 ? (
+            <div className="col-span-full text-center text-muted-foreground">
+              No tutors found.
+            </div>
+          ) : error ? (
+            <div className="col-span-full text-center text-destructive">
+              Error loading tutors.
+            </div>
+          ) : (
+            tutors.map((tutor: Tutor) => (
+              <TutorCard key={tutor.id} tutor={tutor} />
+            ))
+          )}
         </div>
 
         <div className="mt-10 flex justify-center">

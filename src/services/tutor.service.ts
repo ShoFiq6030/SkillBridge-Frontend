@@ -78,6 +78,7 @@ export const tutorService = {
       });
 
       const data = await res.json();
+      
 
       return { data: data.tutorProfile, error: null };
     } catch (err) {
