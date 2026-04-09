@@ -1,14 +1,11 @@
 import { tutorService } from "@/services/tutor.service";
 import Slots from "@/components/modules/tutordetailspage/Slots";
-import Reviews, {
-  dummyReviews,
-} from "@/components/modules/tutordetailspage/Reviews";
+import Reviews from "@/components/modules/tutordetailspage/Reviews";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Star, MapPin, Clock, DollarSign } from "lucide-react";
 import { Tutor, TutorSubject } from "@/types/tutor.type";
 import { authClient } from "@/lib/auth-client";
-
 
 export default async function TutorDetailPage({
   params,
@@ -36,8 +33,6 @@ export default async function TutorDetailPage({
       </div>
     );
   }
-
-  
 
   return (
     <div className="container mx-auto py-8 px-4">

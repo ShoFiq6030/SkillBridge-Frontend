@@ -6,7 +6,7 @@ import Link from "next/link";
 export default async function PopularTutorSection() {
   const { data, error } = await tutorService.getTutors(
     {
-      limit: 6,
+      limit: 10,
       sortBy: "createdAt",
       sortOrder: "desc",
     },
