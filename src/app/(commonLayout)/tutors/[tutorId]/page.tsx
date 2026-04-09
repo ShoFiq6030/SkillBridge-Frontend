@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Star, MapPin, Clock, DollarSign } from "lucide-react";
 import { Tutor, TutorSubject } from "@/types/tutor.type";
 import { authClient } from "@/lib/auth-client";
-import { getUserInServer } from "@/actions/auth-server";
+
 
 export default async function TutorDetailPage({
   params,
@@ -16,7 +16,7 @@ export default async function TutorDetailPage({
   params: Promise<{ tutorId: string }>;
 }) {
   const { tutorId } = await params;
-  const { data: tutor, error } = await tutorService.getTutorById(tutorId);
+  const { data: tutor, error } = await tutorService.getTutorByTutorId(tutorId);
 
   // const session = await getUserInServer();
   // console.log(session);
@@ -37,8 +37,7 @@ export default async function TutorDetailPage({
     );
   }
 
-  const displayReviews =
-    tutor.reviews && tutor.reviews.length > 0 ? tutor.reviews : dummyReviews;
+  
 
   return (
     <div className="container mx-auto py-8 px-4">
@@ -138,7 +137,7 @@ export default async function TutorDetailPage({
         </div>
 
         <div className="lg:col-span-1">
-          <Reviews reviews={displayReviews} />
+          <Reviews reviews={tutor.reviews} />
         </div>
       </div>
     </div>

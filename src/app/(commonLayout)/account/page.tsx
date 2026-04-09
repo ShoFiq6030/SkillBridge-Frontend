@@ -1,5 +1,4 @@
 import { Roles } from "@/constants/roles";
-import { redirect } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,6 +18,8 @@ export default async function AccountPage({
   searchParams: Promise<{ section?: string | undefined; editModal?: boolean }>;
 }) {
   const session = await userService.getSession();
+  console.log(session);
+  const userInfo =session.data?.user;
   const params = await searchParams;
   let section = params.section;
   const isModalOpen = params.editModal || false;
@@ -26,21 +27,19 @@ export default async function AccountPage({
     section = "profile";
   }
 
-  if (!session?.user) {
-    redirect("/login");
-  }
+  
 
   // Map session user to expected format
   const user = {
-    name: session.user.name || "User",
-    email: session.user.email || "",
-    emailVerified: session.user.emailVerified || false,
-    image: session.user.image || "",
-    createdAt: session.user.createdAt || new Date().toISOString(),
-    updatedAt: session.user.updatedAt || new Date().toISOString(),
-    role: session.user.role || "USER",
-    status: session.user.status || "ACTIVE",
-    id: session.user.id,
+    name: userInfo?.name || "User",
+    email: userInfo?.email || "",
+    emailVerified: userInfo?.emailVerified || false,
+    image: userInfo?.image || "",
+    createdAt: userInfo?.createdAt || new Date().toISOString(),
+    updatedAt: userInfo?.updatedAt || new Date().toISOString(),
+    role: userInfo.role || "USER",
+    status: userInfo.status || "ACTIVE",
+    id: userInfo.id,
   };
 
   // Determine active section from search params or default to profile

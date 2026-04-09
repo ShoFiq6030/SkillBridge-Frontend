@@ -1,6 +1,6 @@
 "use server";
 
-import { bookingService } from "@/services/booking.service";
+import { BookingData, bookingService } from "@/services/booking.service";
 import { revalidatePath } from "next/cache";
 
 export const getUserBookingsAction = async () => {
@@ -35,3 +35,9 @@ export const updateReviewAction = async (
   revalidatePath("/dashboard/user-dashboard");
   return result;
 };
+
+export const bookSlotAction = async (bookingData: BookingData ) => {
+  const result = await bookingService.bookSlot(bookingData);
+  revalidatePath("/tutors");
+  return result;
+}

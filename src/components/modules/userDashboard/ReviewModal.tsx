@@ -106,14 +106,18 @@ export function ReviewModal({
                   key={value}
                   type="button"
                   onClick={() => setRating(value)}
-                  className={`focus:outline-none rounded-full p-2 transition-colors ${
-                    rating >= value
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-muted text-muted-foreground"
-                  }`}
+                  className={`focus:outline-none rounded-full p-2 transition-colors `}
                   aria-label={`${value} star${value > 1 ? "s" : ""}`}
                 >
-                  <Star className="h-5 w-5" />
+                  <Star className={` h-5 w-5 ${
+                    rating >= value
+                      ? "text-yellow-500"
+                      : "text-gray-300"
+                  } `}
+
+                  fill={rating >= value ? "currentColor" : "none"}
+
+                   />
                 </button>
               ))}
             </div>

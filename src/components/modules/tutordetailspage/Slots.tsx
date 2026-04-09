@@ -14,7 +14,7 @@ import { useForm } from "@tanstack/react-form";
 import { toast } from "sonner";
 import * as z from "zod";
 import { FieldError } from "@/components/ui/field";
-import { bookSlot } from "@/actions/booking.action";
+import { bookSlotAction } from "@/actions/booking.action";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 
@@ -63,7 +63,7 @@ const Slots: React.FC<SlotsProps> = ({ slots, subjects }) => {
           toast.error("Unauthorized....Please Login...", { id: toastId });
           router.push("/login");
         }
-        const res = await bookSlot(value);
+        const res = await bookSlotAction(value);
         if (res.error) {
           toast.error(
             res.error.message || "Something went wrong, please try again.",

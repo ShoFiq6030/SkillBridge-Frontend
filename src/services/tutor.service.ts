@@ -68,7 +68,7 @@ export const tutorService = {
     }
   },
 
-  getTutorById: async function (id: string) {
+  getTutorByTutorId: async function (id: string) {
     try {
       const res = await fetch(`${env.API_URL}/api/tutor-profile/tutor/${id}`, {
         cache: "no-store",
