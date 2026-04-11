@@ -1,4 +1,21 @@
-export default function AnalyticsPage() {
+import { adminService } from "@/services/admin.service";
+
+export default async function AnalyticsPage() {
+  const { data, error } = await adminService.getAnalytics();
+
+  if (error) {
+    return (
+      <div className="space-y-6">
+        <div>
+          <p className="text-red-500">{error.message}</p>
+        </div>
+      </div>
+    );
+  }
+
+  console.log(data);
+  const { users, bookings, revenue, reviews } = data;
+
   return (
     <div className="space-y-6">
       <div>
@@ -15,7 +32,7 @@ export default function AnalyticsPage() {
               <p className="text-sm font-medium text-muted-foreground">
                 Total Users
               </p>
-              <p className="text-2xl font-bold">2,543</p>
+              <p className="text-2xl font-bold">{users.total}</p>
             </div>
           </div>
         </div>
@@ -26,7 +43,7 @@ export default function AnalyticsPage() {
               <p className="text-sm font-medium text-muted-foreground">
                 Active Tutors
               </p>
-              <p className="text-2xl font-bold">156</p>
+              <p className="text-2xl font-bold">{users.tutors}</p>
             </div>
           </div>
         </div>
@@ -37,7 +54,7 @@ export default function AnalyticsPage() {
               <p className="text-sm font-medium text-muted-foreground">
                 Total Bookings
               </p>
-              <p className="text-2xl font-bold">1,234</p>
+              <p className="text-2xl font-bold">{bookings.total}</p>
             </div>
           </div>
         </div>
@@ -48,7 +65,7 @@ export default function AnalyticsPage() {
               <p className="text-sm font-medium text-muted-foreground">
                 Revenue
               </p>
-              <p className="text-2xl font-bold">$12,543</p>
+              <p className="text-2xl font-bold">${revenue.total.toFixed(2)}</p>
             </div>
           </div>
         </div>

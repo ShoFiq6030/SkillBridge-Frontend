@@ -1,7 +1,13 @@
 import { tutorService } from "@/services/tutor.service";
 import { userService } from "@/services/user.service";
 import { Tutor, Review } from "@/types/tutor.type";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -16,7 +22,9 @@ export default async function TutorDashboard() {
     return (
       <div className="space-y-6">
         <div className="text-center py-12">
-          <p className="text-muted-foreground">Please log in to view your dashboard</p>
+          <p className="text-muted-foreground">
+            Please log in to view your dashboard
+          </p>
           <Button asChild className="mt-4">
             <a href="/login">Log In</a>
           </Button>
@@ -27,17 +35,21 @@ export default async function TutorDashboard() {
 
   const tutorDataResult = await tutorService.getTutorByUserIdAuth(userInfo.id);
   // console.log(tutorDataResult)
-  const {data:tutorStats}= await tutorService.getTutorStats();
+  const { data: tutorStats } = await tutorService.getTutorStats();
   // console.log(tutorStats)
-  
+
   if (tutorDataResult.error || !tutorDataResult.data) {
     return (
       <div className="space-y-6">
         <div className="text-center py-12">
           <p className="text-muted-foreground">Error loading tutor data</p>
-          <p className="text-sm text-red-500 mt-2">{tutorDataResult.error?.message || "Unknown error"}</p>
+          <p className="text-sm text-red-500 mt-2">
+            {tutorDataResult.error?.message || "Unknown error"}
+          </p>
           <Button asChild variant="outline" className="mt-4">
-            <a href="/dashboard/tutor-dashboard/manage-subjects">Create Tutor Profile</a>
+            <a href="/dashboard/tutor-dashboard/manage-subjects">
+              Create Tutor Profile
+            </a>
           </Button>
         </div>
       </div>
@@ -47,16 +59,16 @@ export default async function TutorDashboard() {
   const tutorData: Tutor = tutorDataResult.data;
 
   // Calculate stats
-  const todaySessions = tutorData.slots.filter(slot =>
-    slot.isBooked && isToday(parseISO(slot.startAt))
+  const todaySessions = tutorData.slots.filter(
+    (slot) => slot.isBooked && isToday(parseISO(slot.startAt)),
   ).length;
 
-  const thisWeekSessions = tutorData.slots.filter(slot =>
-    slot.isBooked && isThisWeek(parseISO(slot.startAt))
+  const thisWeekSessions = tutorData.slots.filter(
+    (slot) => slot.isBooked && isThisWeek(parseISO(slot.startAt)),
   ).length;
 
   const uniqueStudentIds = new Set(
-    tutorData.bookings.map(booking => booking.studentId)
+    tutorData.bookings.map((booking) => booking.studentId),
   );
   const totalStudents = uniqueStudentIds.size;
 
@@ -64,24 +76,29 @@ export default async function TutorDashboard() {
 
   // Get upcoming bookings with slot and subject info
   const upcomingBookings = tutorData.bookings
-    .filter(booking => booking.status === "CONFIRMED")
-    .map(booking => {
-      const slot = tutorData.slots.find(s => s.id === booking.slotId);
-      const tutorSubject = tutorData.subjects.find(s => s.id === booking.tutorSubjectId);
+    .filter((booking) => booking.status === "CONFIRMED")
+    .map((booking) => {
+      const slot = tutorData.slots.find((s) => s.id === booking.slotId);
+      const tutorSubject = tutorData.subjects.find(
+        (s) => s.id === booking.tutorSubjectId,
+      );
       return {
         booking,
         slot,
-        tutorSubject
+        tutorSubject,
       };
     })
-    .filter(item => item.slot !== undefined)
-    .sort((a, b) => new Date(a.slot!.startAt).getTime() - new Date(b.slot!.startAt).getTime())
+    .filter((item) => item.slot !== undefined)
+    .sort(
+      (a, b) =>
+        new Date(a.slot!.startAt).getTime() -
+        new Date(b.slot!.startAt).getTime(),
+    )
     .slice(0, 3);
 
   // Get recent reviews (with dummy data if empty)
-  const recentReviews: Review[] = tutorData.reviews.length > 0
-    ? tutorData.reviews.slice(0, 3)
-    : generateDummyReviews(tutorData.id);
+  const recentReviews: Review[] =
+    tutorData.reviews.length > 0 ? tutorData.reviews.slice(0, 3) : [];
 
   return (
     <div className="space-y-6">
@@ -89,7 +106,8 @@ export default async function TutorDashboard() {
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Tutor Dashboard</h1>
           <p className="text-muted-foreground">
-            Welcome back, {tutorData.user.name}! Here's an overview of your tutoring activities.
+            Welcome back, {tutorData.user.name}! Here's an overview of your
+            tutoring activities.
           </p>
         </div>
         <div className="flex items-center space-x-4">
@@ -99,7 +117,9 @@ export default async function TutorDashboard() {
           </Avatar>
           <div className="text-right">
             <p className="font-medium">{tutorData.user.name}</p>
-            <p className="text-sm text-muted-foreground">{tutorData.headline}</p>
+            <p className="text-sm text-muted-foreground">
+              {tutorData.headline}
+            </p>
           </div>
         </div>
       </div>
@@ -108,11 +128,12 @@ export default async function TutorDashboard() {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Sessions</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Total Sessions
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{tutorStats.totalBookings}</div>
-           
           </CardContent>
         </Card>
 
@@ -123,52 +144,67 @@ export default async function TutorDashboard() {
           <CardContent>
             <div className="text-2xl font-bold">{thisWeekSessions}</div>
             <p className="text-xs text-muted-foreground">
-              {thisWeekSessions === 0 ? "No sessions this week" : `${thisWeekSessions} session${thisWeekSessions > 1 ? 's' : ''}`}
+              {thisWeekSessions === 0
+                ? "No sessions this week"
+                : `${thisWeekSessions} session${thisWeekSessions > 1 ? "s" : ""}`}
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Students</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Total Students
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{totalStudents}</div>
             <p className="text-xs text-muted-foreground">
-              {totalStudents === 0 ? "No students yet" : `Active student${totalStudents > 1 ? 's' : ''}`}
+              {totalStudents === 0
+                ? "No students yet"
+                : `Active student${totalStudents > 1 ? "s" : ""}`}
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Average Rating</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Average Rating
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
               {avgRating > 0 ? `${avgRating.toFixed(1)} ⭐` : "No ratings yet"}
             </div>
             <p className="text-xs text-muted-foreground">
-              {tutorData.totalReviews} {tutorData.totalReviews === 1 ? 'review' : 'reviews'}
+              {tutorData.totalReviews}{" "}
+              {tutorData.totalReviews === 1 ? "review" : "reviews"}
             </p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Complate Sessions</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Complate Sessions
+            </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{tutorStats.completedBookings}</div>
-           
+            <div className="text-2xl font-bold">
+              {tutorStats.completedBookings}
+            </div>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Earnings</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Total Earnings
+            </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold ">{tutorStats.totalEarnings}$</div>
-           
+            <div className="text-2xl font-bold ">
+              {tutorStats.totalEarnings}$
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -183,12 +219,17 @@ export default async function TutorDashboard() {
           <CardContent className="space-y-4">
             <div className="flex items-start space-x-4">
               <Avatar className="h-16 w-16">
-                <AvatarImage src={tutorData.user.image} alt={tutorData.user.name} />
+                <AvatarImage
+                  src={tutorData.user.image}
+                  alt={tutorData.user.name}
+                />
                 <AvatarFallback>{tutorData.user.name.charAt(0)}</AvatarFallback>
               </Avatar>
               <div className="flex-1">
                 <h3 className="text-lg font-semibold">{tutorData.user.name}</h3>
-                <p className="text-sm text-muted-foreground">{tutorData.headline}</p>
+                <p className="text-sm text-muted-foreground">
+                  {tutorData.headline}
+                </p>
                 <div className="flex items-center mt-1">
                   <span className="text-yellow-500">⭐</span>
                   <span className="ml-1 text-sm font-medium">
@@ -204,7 +245,9 @@ export default async function TutorDashboard() {
 
             <div>
               <h4 className="text-sm font-medium mb-2">Bio</h4>
-              <p className="text-sm text-muted-foreground">{tutorData.bio || "No bio provided yet."}</p>
+              <p className="text-sm text-muted-foreground">
+                {tutorData.bio || "No bio provided yet."}
+              </p>
             </div>
 
             <div>
@@ -217,7 +260,9 @@ export default async function TutorDashboard() {
                     </Badge>
                   ))
                 ) : (
-                  <span className="text-sm text-muted-foreground">No subjects added yet</span>
+                  <span className="text-sm text-muted-foreground">
+                    No subjects added yet
+                  </span>
                 )}
               </div>
             </div>
@@ -247,7 +292,10 @@ export default async function TutorDashboard() {
             {upcomingBookings.length > 0 ? (
               <div className="space-y-4">
                 {upcomingBookings.map(({ booking, slot, tutorSubject }) => (
-                  <div key={booking.id} className="flex items-start space-x-3 p-3 border rounded-lg">
+                  <div
+                    key={booking.id}
+                    className="flex items-start space-x-3 p-3 border rounded-lg"
+                  >
                     <div className="flex-1">
                       <p className="font-medium">
                         {tutorSubject?.category.name || "General"}
@@ -258,7 +306,8 @@ export default async function TutorDashboard() {
                             {format(parseISO(slot.startAt), "MMM dd, yyyy")}
                           </p>
                           <p className="text-sm text-muted-foreground">
-                            {format(parseISO(slot.startAt), "h:mm a")} - {format(parseISO(slot.endAt), "h:mm a")}
+                            {format(parseISO(slot.startAt), "h:mm a")} -{" "}
+                            {format(parseISO(slot.endAt), "h:mm a")}
                           </p>
                         </>
                       )}
@@ -271,7 +320,9 @@ export default async function TutorDashboard() {
               <div className="text-center py-8">
                 <p className="text-muted-foreground">No upcoming sessions</p>
                 <Button variant="outline" className="mt-2" asChild>
-                  <a href="/dashboard/tutor-dashboard/manage-slots">Add Availability</a>
+                  <a href="/dashboard/tutor-dashboard/manage-slots">
+                    Add Availability
+                  </a>
                 </Button>
               </div>
             )}
@@ -293,8 +344,13 @@ export default async function TutorDashboard() {
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center space-x-2">
                       <Avatar className="h-8 w-8">
-                        <AvatarImage src={review.student?.image} alt={review.student?.name} />
-                        <AvatarFallback>{review.student?.name?.charAt(0) || "S"}</AvatarFallback>
+                        <AvatarImage
+                          src={review.student?.image}
+                          alt={review.student?.name}
+                        />
+                        <AvatarFallback>
+                          {review.student?.name?.charAt(0) || "S"}
+                        </AvatarFallback>
                       </Avatar>
                       <span className="font-medium text-sm">
                         {review.student?.name || "Student"}
@@ -304,7 +360,9 @@ export default async function TutorDashboard() {
                       <span className="text-yellow-500">
                         {"★".repeat(review.rating)}
                       </span>
-                      <span className="ml-1 text-sm font-medium">{review.rating}</span>
+                      <span className="ml-1 text-sm font-medium">
+                        {review.rating}
+                      </span>
                     </div>
                   </div>
                   <p className="text-sm text-muted-foreground line-clamp-3">
@@ -319,7 +377,9 @@ export default async function TutorDashboard() {
           ) : (
             <div className="text-center py-8">
               <p className="text-muted-foreground">No reviews yet</p>
-              <p className="text-sm text-muted-foreground">Complete sessions to receive feedback from students</p>
+              <p className="text-sm text-muted-foreground">
+                Complete sessions to receive feedback from students
+              </p>
             </div>
           )}
         </CardContent>
@@ -333,25 +393,41 @@ export default async function TutorDashboard() {
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <Button asChild variant="outline" className="h-auto py-4 flex flex-col">
+            <Button
+              asChild
+              variant="outline"
+              className="h-auto py-4 flex flex-col"
+            >
               <a href="/dashboard/tutor-dashboard/manage-subjects">
                 <span className="text-lg mb-1">📚</span>
                 <span className="text-sm">Manage Subjects</span>
               </a>
             </Button>
-            <Button asChild variant="outline" className="h-auto py-4 flex flex-col">
+            <Button
+              asChild
+              variant="outline"
+              className="h-auto py-4 flex flex-col"
+            >
               <a href="/dashboard/tutor-dashboard/manage-slots">
                 <span className="text-lg mb-1">📅</span>
                 <span className="text-sm">Manage Slots</span>
               </a>
             </Button>
-            <Button asChild variant="outline" className="h-auto py-4 flex flex-col">
+            <Button
+              asChild
+              variant="outline"
+              className="h-auto py-4 flex flex-col"
+            >
               <a href="/dashboard/tutor-dashboard/manage-bookings">
                 <span className="text-lg mb-1">📋</span>
                 <span className="text-sm">Manage Bookings</span>
               </a>
             </Button>
-            <Button asChild variant="outline" className="h-auto py-4 flex flex-col">
+            <Button
+              asChild
+              variant="outline"
+              className="h-auto py-4 flex flex-col"
+            >
               <a href="/dashboard/tutor-dashboard/history">
                 <span className="text-lg mb-1">📊</span>
                 <span className="text-sm">View History</span>
@@ -362,44 +438,4 @@ export default async function TutorDashboard() {
       </Card>
     </div>
   );
-}
-
-// Helper function to generate dummy reviews
-function generateDummyReviews(tutorProfileId: string): Review[] {
-  const dummyComments = [
-    "Excellent tutor! Very patient and explains concepts clearly.",
-    "Helped me understand physics much better. Highly recommended!",
-    "Great session! Very knowledgeable and professional.",
-    "Amazing tutor! My grades have improved significantly.",
-    "Very helpful and accommodating. Would definitely book again!",
-    "Clear explanations and great at breaking down complex topics.",
-    "Best tutor I've ever had! Very supportive and encouraging.",
-    "Very thorough and makes sure I understand everything.",
-    "Fantastic! Always on time and prepared for sessions.",
-    "My child's math grades improved from C to A. Thank you!"
-  ];
-
-  const studentNames = [
-    "John Doe", "Jane Smith", "Bob Johnson", "Alice Brown",
-    "Charlie Wilson", "Emma Davis", "Michael Chen", "Sarah Johnson",
-    "David Wilson", "Lisa Anderson"
-  ];
-
-  // Generate 3 dummy reviews
-  return Array.from({ length: 3 }, (_, i) => ({
-    id: `dummy-${i + 1}`,
-    tutorProfileId: tutorProfileId,
-    studentId: `student-${i + 1}`,
-    bookingId: `booking-${i + 1}`,
-    rating: Math.floor(Math.random() * 2) + 4, // 4 or 5
-    comment: dummyComments[i],
-    createdAt: new Date(Date.now() - i * 7 * 24 * 60 * 60 * 1000).toISOString(), // Each review a week apart
-    updatedAt: new Date(Date.now() - i * 7 * 24 * 60 * 60 * 1000).toISOString(),
-    student: {
-      id: `student-${i + 1}`,
-      name: studentNames[i],
-      email: `student${i + 1}@example.com`,
-      image: ""
-    }
-  }));
 }

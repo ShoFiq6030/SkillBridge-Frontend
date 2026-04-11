@@ -43,8 +43,7 @@ export interface User {
   createdAt: string;
   updatedAt: string;
   role: "ADMIN" | "TUTOR" | "USER";
-  status?: string;
-
+  status: "ACTIVE" | "BANNED";
 }
 
 export interface TutorSubject {
@@ -69,7 +68,7 @@ export interface TutorSlot {
   tutorProfileId: string;
   startAt: string;
   endAt: string;
-  duration: number; 
+  duration: number;
   isBooked: boolean;
   createdAt: string;
   updatedAt: string;
