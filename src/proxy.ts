@@ -19,6 +19,27 @@ export async function proxy(request: NextRequest) {
   if (!isAuthenticated && pathname !== "/login") {
     return NextResponse.redirect(new URL("/login", request.url));
   }
+  if (pathname === "/dashboard") {
+    if (role === Roles.user) {
+      return NextResponse.redirect(
+        new URL("/dashboard/user-dashboard", request.url),
+      );
+    }
+    if (role === Roles.tutor) {
+      return NextResponse.redirect(
+        new URL("/dashboard/tutor-dashboard", request.url),
+      );
+    }
+
+    if (role === Roles.admin) {
+      return NextResponse.redirect(
+        new URL("/dashboard/admin-dashboard", request.url),
+      );
+    }
+
+    return NextResponse.next();
+  }
+
   // Admin access control
   if (
     role === Roles.admin &&

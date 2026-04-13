@@ -108,4 +108,125 @@ export const adminService = {
       return { data: null, error: { message: "Something Went Wrong" } };
     }
   },
+
+  getTutors: async function () {
+    try {
+      const cookieStore = await cookies();
+      const res = await fetch(`${env.API_URL}/api/admin/tutors`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieStore.toString(),
+        },
+        cache: "no-store",
+      });
+      const data = await res.json();
+      if (data.success === false) {
+        return {
+          data: null,
+          error: { message: data.message || "Failed to fetch tutors" },
+        };
+      }
+      return { data: data.data, error: null };
+    } catch (error) {
+      return { data: null, error: { message: "Something Went Wrong" } };
+    }
+  },
+
+  getCategories: async function () {
+    try {
+      const res = await fetch(`${env.API_URL}/api/categories`, {
+        cache: "force-cache",
+        next: { revalidate: 60, tags: ["categories"] },
+      });
+      const data = await res.json();
+      if (data.success === false) {
+        return {
+          data: null,
+          error: { message: data.message || "Failed to fetch categories" },
+        };
+      }
+      return { data: data.data, error: null };
+    } catch (error) {
+      return { data: null, error: { message: "Something Went Wrong" } };
+    }
+  },
+
+  createCategory: async function (name: string, slug: string) {
+    try {
+      const cookieStore = await cookies();
+      const res = await fetch(`${env.API_URL}/api/categories`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieStore.toString(),
+        },
+        body: JSON.stringify({ name, slug }),
+        cache: "no-store",
+      });
+      const data = await res.json();
+      if (data.success === false) {
+        return {
+          data: null,
+          error: { message: data.message || "Failed to create category" },
+        };
+      }
+      return { data: data.data, error: null };
+    } catch (error) {
+      return { data: null, error: { message: "Something Went Wrong" } };
+    }
+  },
+
+  deleteCategory: async function (categoryId: string) {
+    try {
+      const cookieStore = await cookies();
+      const res = await fetch(`${env.API_URL}/api/categories/${categoryId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieStore.toString(),
+        },
+        cache: "no-store",
+      });
+      const data = await res.json();
+      if (data.success === false) {
+        return {
+          data: null,
+          error: { message: data.message || "Failed to delete category" },
+        };
+      }
+      return { data: data.data || true, error: null };
+    } catch (error) {
+      return { data: null, error: { message: "Something Went Wrong" } };
+    }
+  },
+
+  updateCategory: async function (
+    categoryId: string,
+    name: string,
+    slug: string,
+  ) {
+    try {
+      const cookieStore = await cookies();
+      const res = await fetch(`${env.API_URL}/api/categories/${categoryId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieStore.toString(),
+        },
+        body: JSON.stringify({ name, slug }),
+        cache: "no-store",
+      });
+      const data = await res.json();
+      if (data.success === false) {
+        return {
+          data: null,
+          error: { message: data.message || "Failed to update category" },
+        };
+      }
+      return { data: data.data, error: null };
+    } catch (error) {
+      return { data: null, error: { message: "Something Went Wrong" } };
+    }
+  },
 };

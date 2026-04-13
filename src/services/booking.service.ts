@@ -1,5 +1,5 @@
 import { env } from "@/env";
-import { BookingResponse } from "@/types/booking";
+import { Booking, BookingResponse } from "@/types/booking";
 import { cookies } from "next/headers";
 
 export interface BookingData {
@@ -31,6 +31,31 @@ export const bookingService = {
         };
       }
       return { data: data, error: null };
+    } catch (error) {
+      return { data: null, error: { message: "Something Went Wrong" } };
+    }
+  },
+
+  getAdminBookings: async function ()
+     {
+    try {
+      const cookieStore = await cookies();
+      const res = await fetch(`${env.API_URL}/api/booking/admin`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieStore.toString(),
+        },
+        cache: "no-store",
+      });
+      const data = await res.json();
+      if (data.success === false) {
+        return {
+          data: null,
+          error: { message: data.message || "Failed to fetch bookings" },
+        };
+      }
+      return { data: data.data, error: null };
     } catch (error) {
       return { data: null, error: { message: "Something Went Wrong" } };
     }

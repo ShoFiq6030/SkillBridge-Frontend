@@ -24,7 +24,7 @@ import { userRoutes } from "@/routes/userRoutes";
 import { adminRoutes } from "@/routes/adminRoutes";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { authClient } from "@/lib/auth-client";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { LogOutIcon, UserIcon } from "lucide-react";
 
 export function AppSidebar({
@@ -35,6 +35,7 @@ export function AppSidebar({
   // props: React.ComponentProps<typeof Sidebar>;
 }) {
   const router = useRouter();
+  const pathname = usePathname();
 
   const handleSignOut = async () => {
     await authClient.signOut({
@@ -74,7 +75,7 @@ export function AppSidebar({
               <SidebarMenu>
                 {item.items.map((item) => (
                   <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild>
+                    <SidebarMenuButton asChild isActive={pathname === item.url}>
                       <Link href={item.url}>{item.title}</Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -108,7 +109,7 @@ export function AppSidebar({
             </div>
           </SidebarMenuItem>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild>
+            <SidebarMenuButton asChild isActive={pathname === "/account"}>
               <Link href="/account">
                 <UserIcon className="h-4 w-4" />
                 Account

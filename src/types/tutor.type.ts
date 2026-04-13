@@ -6,11 +6,14 @@ export interface Booking {
   tutorSubjectId: string;
   status: "PENDING" | "CONFIRMED" | "CANCELLED" | "COMPLETED";
   note?: string;
+  price: number;
   createdAt: string;
   updatedAt: string;
-  slot?: TutorSlot;
-  tutorSubject?: TutorSubject;
-  student?: User;
+  tutorProfile: Tutor;
+  student: User;
+  slot: TutorSlot;
+  tutorSubject: TutorSubject;
+  review?: Review;
 }
 
 export interface Tutor {
@@ -79,6 +82,7 @@ export interface Review {
   tutorProfileId: string;
   studentId: string;
   bookingId: string;
+  status: "PENDING" | "APPROVED" | "REJECTED";
   rating: number;
   comment: string;
   createdAt: string;
