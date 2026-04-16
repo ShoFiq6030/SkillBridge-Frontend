@@ -25,6 +25,8 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import * as z from "zod";
 import { env } from "@/env";
+import { useState } from "react";
+import { IoEye, IoEyeOff } from "react-icons/io5";
 
 const formSchema = z.object({
   name: z.string().min(1, "This field is required"),
@@ -38,7 +40,7 @@ export function RegisterForm({ ...props }: React.ComponentProps<typeof Card>) {
     try {
       const data = await authClient.signIn.social({
         provider: "google",
-        callbackURL: "http://localhost:3000",
+        callbackURL: "/",
       });
 
       console.log(data);
@@ -46,6 +48,7 @@ export function RegisterForm({ ...props }: React.ComponentProps<typeof Card>) {
       console.error("Google login failed:", error);
     }
   };
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
   const form = useForm({
@@ -63,7 +66,7 @@ export function RegisterForm({ ...props }: React.ComponentProps<typeof Card>) {
       try {
         const { data, error } = await authClient.signUp.email({
           ...value,
-          callbackURL: `${env.NEXT_PUBLIC_FRONTEND_URL}/login`,
+          callbackURL: `/login`,
         });
 
         if (error) {
@@ -146,15 +149,25 @@ export function RegisterForm({ ...props }: React.ComponentProps<typeof Card>) {
                 const isInvalid =
                   field.state.meta.isTouched && !field.state.meta.isValid;
                 return (
-                  <Field>
+                  <Field className="relative">
                     <FieldLabel htmlFor={field.name}>Password</FieldLabel>
                     <Input
-                      type="password"
+                      type={showPassword ? "text" : "password"}
                       id={field.name}
                       name={field.name}
                       value={field.state.value}
                       onChange={(e) => field.handleChange(e.target.value)}
                     />
+
+                    {
+                      <div className="absolute left-77 top-10 cursor-pointer">
+                        {showPassword ? (
+                          <IoEyeOff onClick={() => setShowPassword(false)} />
+                        ) : (
+                          <IoEye onClick={() => setShowPassword(true)} />
+                        )}
+                      </div>
+                    }
                     {isInvalid && (
                       <FieldError errors={field.state.meta.errors} />
                     )}

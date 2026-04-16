@@ -1,6 +1,8 @@
 import { adminService } from "@/services/admin.service";
 import CategoryManager from "@/components/modules/adminPage/CategoryManager";
 
+export const dynamic = "force-dynamic";
+
 export default async function CreateCategoryPage() {
   const categoriesResult = await adminService.getCategories();
   const categories = categoriesResult.data || [];

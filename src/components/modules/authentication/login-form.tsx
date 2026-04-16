@@ -35,7 +35,7 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
   const handleGoogleLogin = async () => {
     const data = authClient.signIn.social({
       provider: "google",
-      callbackURL: "http://localhost:3000",
+      callbackURL: "/",
     });
 
     console.log(data);
@@ -54,7 +54,7 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
       try {
         const { data, error } = await authClient.signIn.email({
           ...value,
-          callbackURL:env.NEXT_PUBLIC_FRONTEND_URL,
+          callbackURL: "/",
         });
         console.log(data);
 

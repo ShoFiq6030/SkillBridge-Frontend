@@ -1,5 +1,7 @@
 import { adminService } from "@/services/admin.service";
 
+export const dynamic = "force-dynamic";
+
 export default async function AnalyticsPage() {
   const { data, error } = await adminService.getAnalytics();
 

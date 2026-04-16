@@ -5,15 +5,11 @@ import { Card, CardContent } from "@/components/ui/card";
 import { updateBookingStatusAction } from "@/actions/admin.action";
 import { Booking } from "@/types/tutor.type";
 
-
+export const dynamic = "force-dynamic";
 
 export default async function AdminManageBookingsPage() {
-  
-
-   const { data, error } = await bookingService.getAdminBookings();
-  const bookingData= data as Booking[];
-
- 
+  const { data, error } = await bookingService.getAdminBookings();
+  const bookingData = data as Booking[];
 
   if (error || !data) {
     return (
@@ -28,7 +24,7 @@ export default async function AdminManageBookingsPage() {
     );
   }
 
-  const confirmedBookings = bookingData 
+  const confirmedBookings = bookingData
     .filter((booking) => booking.status === "CONFIRMED")
     .map((booking) => ({
       booking,
@@ -80,7 +76,6 @@ export default async function AdminManageBookingsPage() {
         confirmedBookings={confirmedBookings}
         completedBookings={completedBookings}
         cancelledBookings={cancelledBookings}
-        
       />
     </div>
   );

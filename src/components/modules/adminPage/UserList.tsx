@@ -202,9 +202,9 @@ export function UserList({ initialUsers }: UserListProps) {
                       {user.email}
                     </p>
                   </div>
-                  <div>{getStatusBadge(user.status)}</div>
-                  <div>{getRoleBadge(user.role)}</div>
-                  <div>{user.emailVerified ? "Verified" : "Not Verified"}</div>
+                  <div>{getStatusBadge(user?.status || "UNKNOWN")}</div>
+                  <div>{getRoleBadge(user?.role)}</div>
+                  <div>{user?.emailVerified ? "Verified" : "Not Verified"}</div>
                   <div>
                     <Select
                       value={getCurrentValue(user.id, "status")}

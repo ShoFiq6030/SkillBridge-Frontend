@@ -13,6 +13,8 @@ function LoadingSpinner() {
   );
 }
 
+export const dynamic = "force-dynamic";
+
 export default async function ManageBookingsPage() {
   let tutorData: Tutor | null = null;
   let error: string | null = null;
@@ -121,6 +123,25 @@ export default async function ManageBookingsPage() {
     })
     .slice(0, 10);
 
+  const cancelledBookings = tutorData.bookings
+    .filter((booking) => booking.status === "CANCELLED")
+    .map((booking) => {
+      const slot = tutorData.slots.find((s) => s.id === booking.slotId);
+      const tutorSubject = tutorData.subjects.find(
+        (s) => s.id === booking.tutorSubjectId,
+      );
+      return {
+        booking,
+        slot,
+        tutorSubject,
+      };
+    })
+    .sort((a, b) => {
+      const dateA = a.slot ? new Date(a.slot.startAt) : new Date(0);
+      const dateB = b.slot ? new Date(b.slot.startAt) : new Date(0);
+      return dateB.getTime() - dateA.getTime(); // Most recent first
+    });
+
   return (
     <div className="space-y-6">
       <div>
@@ -131,8 +152,9 @@ export default async function ManageBookingsPage() {
       </div>
 
       <ManageBookingsClient
-        upcomingBookings={upcomingBookings}
-        pastBookings={pastBookings}
+        confirmedBookings={upcomingBookings}
+        completedBookings={pastBookings}
+        cancelledBookings={cancelledBookings}
       />
     </div>
   );

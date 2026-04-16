@@ -41,12 +41,12 @@ export interface User {
   id: string;
   email: string;
   name: string;
-  image: string;
+  image: string | null;
   emailVerified: boolean;
   createdAt: string;
   updatedAt: string;
   role: "ADMIN" | "TUTOR" | "USER";
-  status: "ACTIVE" | "BANNED";
+  status?: "ACTIVE" | "BANNED";
 }
 
 export interface TutorSubject {

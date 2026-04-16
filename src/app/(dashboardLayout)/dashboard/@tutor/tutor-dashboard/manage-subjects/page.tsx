@@ -1,7 +1,13 @@
 import { tutorService } from "@/services/tutor.service";
 import { userService } from "@/services/user.service";
 import { Tutor, Category } from "@/types/tutor.type";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
@@ -16,6 +22,8 @@ function LoadingSpinner() {
     </div>
   );
 }
+
+export const dynamic = "force-dynamic";
 
 export default async function ManageSubjectsPage() {
   return (
@@ -42,7 +50,9 @@ async function SubjectsContent() {
     return (
       <Card>
         <CardContent className="flex flex-col items-center justify-center py-12">
-          <p className="text-muted-foreground mb-4">Please log in to manage subjects</p>
+          <p className="text-muted-foreground mb-4">
+            Please log in to manage subjects
+          </p>
           <Button asChild>
             <a href="/login">Log In</a>
           </Button>
@@ -52,13 +62,15 @@ async function SubjectsContent() {
   }
 
   const tutorDataResult = await tutorService.getTutorByUserIdAuth(userInfo.id);
-  
+
   if (tutorDataResult.error || !tutorDataResult.data) {
     return (
       <Card>
         <CardContent className="flex flex-col items-center justify-center py-12">
           <p className="text-muted-foreground mb-2">Error loading subjects</p>
-          <p className="text-sm text-red-500">{tutorDataResult.error?.message || "Unknown error"}</p>
+          <p className="text-sm text-red-500">
+            {tutorDataResult.error?.message || "Unknown error"}
+          </p>
         </CardContent>
       </Card>
     );
@@ -72,12 +84,12 @@ async function SubjectsContent() {
 
   // Get tutor's current subject category IDs
   const tutorCategoryIds = new Set(
-    tutorData.subjects.map(subject => subject.categoryId)
+    tutorData.subjects.map((subject) => subject.categoryId),
   );
 
   // Filter available categories (not already added)
   const availableCategories = allCategories.filter(
-    category => !tutorCategoryIds.has(category.id)
+    (category) => !tutorCategoryIds.has(category.id),
   );
 
   return (
@@ -86,7 +98,7 @@ async function SubjectsContent() {
       <TutorSubjects tutorData={tutorData} />
 
       {/* Add New Subject */}
-      <AddNewSubject availableCategories={availableCategories}  />
+      <AddNewSubject availableCategories={availableCategories} />
     </>
   );
 }

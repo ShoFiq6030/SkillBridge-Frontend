@@ -9,7 +9,13 @@ import {
 } from "@/components/modules/accountPage";
 import { tutorService } from "@/services/tutor.service";
 import Link from "next/link";
+// import { userService } from "@/services/user.service";
+import { User } from "@/types";
+
 import { userService } from "@/services/user.service";
+
+
+export const dynamic = "force-dynamic";
 
 // Main Account Page Component
 export default async function AccountPage({
@@ -19,28 +25,13 @@ export default async function AccountPage({
 }) {
   const session = await userService.getSession();
   console.log(session);
-  const userInfo =session.data?.user;
+  const user = session.data?.user as User;
   const params = await searchParams;
   let section = params.section;
   const isModalOpen = params.editModal || false;
   if (!section) {
     section = "profile";
   }
-
-  
-
-  // Map session user to expected format
-  const user = {
-    name: userInfo?.name || "User",
-    email: userInfo?.email || "",
-    emailVerified: userInfo?.emailVerified || false,
-    image: userInfo?.image || "",
-    createdAt: userInfo?.createdAt || new Date().toISOString(),
-    updatedAt: userInfo?.updatedAt || new Date().toISOString(),
-    role: userInfo.role || "USER",
-    status: userInfo.status || "ACTIVE",
-    id: userInfo.id,
-  };
 
   // Determine active section from search params or default to profile
 
@@ -57,6 +48,12 @@ export default async function AccountPage({
     }
   }
   // console.log(isModalOpen);
+
+  if (!session) {
+    return (
+      <h1 className="text-3xl font-bold tracking-tight">user not found </h1>
+    );
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -82,13 +79,10 @@ export default async function AccountPage({
 
         {/* Main Content */}
         <div className="space-y-6">
-          {section === "profile" && <ProfileSection user={user} />}
+          {section === "profile" && <ProfileSection user={user as User} />}
           {section === "password" && <PasswordResetSection />}
           {section === "tutor-profile" && isTutor && tutorData && (
-            <TutorProfileSection 
-              tutor={tutorData} 
-              isModalOpen={isModalOpen} 
-            />
+            <TutorProfileSection tutor={tutorData} isModalOpen={isModalOpen} />
           )}
           {section === "tutor-profile" && isTutor && !tutorData && (
             <Card>

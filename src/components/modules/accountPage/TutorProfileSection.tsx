@@ -14,7 +14,7 @@ import { GraduationCap } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { EditModal } from "./EditModal";
-import EditButton from "./EditButton";
+
 import { useState } from "react";
 
 export interface TutorProfileSectionProps {

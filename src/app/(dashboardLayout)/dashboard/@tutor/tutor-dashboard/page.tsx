@@ -13,6 +13,8 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { format, parseISO, isToday, isThisWeek } from "date-fns";
 
+export const dynamic = "force-dynamic";
+
 export default async function TutorDashboard() {
   const session = await userService.getSession();
   const userInfo = session.data?.user;
@@ -112,8 +114,14 @@ export default async function TutorDashboard() {
         </div>
         <div className="flex items-center space-x-4">
           <Avatar className="h-12 w-12">
-            <AvatarImage src={tutorData.user.image} alt={tutorData.user.name} />
-            <AvatarFallback>{tutorData.user.name.charAt(0)}</AvatarFallback>
+            {tutorData.user.image ? (
+              <AvatarImage
+                src={tutorData.user.image}
+                alt={tutorData.user.name}
+              />
+            ) : (
+              <AvatarFallback>{tutorData.user.name.charAt(0)}</AvatarFallback>
+            )}
           </Avatar>
           <div className="text-right">
             <p className="font-medium">{tutorData.user.name}</p>
@@ -218,12 +226,17 @@ export default async function TutorDashboard() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-start space-x-4">
-              <Avatar className="h-16 w-16">
-                <AvatarImage
-                  src={tutorData.user.image}
-                  alt={tutorData.user.name}
-                />
-                <AvatarFallback>{tutorData.user.name.charAt(0)}</AvatarFallback>
+              <Avatar className="h-12 w-12">
+                {tutorData.user.image ? (
+                  <AvatarImage
+                    src={tutorData.user.image}
+                    alt={tutorData.user.name}
+                  />
+                ) : (
+                  <AvatarFallback>
+                    {tutorData.user.name.charAt(0)}
+                  </AvatarFallback>
+                )}
               </Avatar>
               <div className="flex-1">
                 <h3 className="text-lg font-semibold">{tutorData.user.name}</h3>
@@ -339,18 +352,21 @@ export default async function TutorDashboard() {
         <CardContent>
           {recentReviews.length > 0 ? (
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {recentReviews.map((review) => (
+              {recentReviews.map((review: Review) => (
                 <div key={review.id} className="p-4 border rounded-lg">
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center space-x-2">
-                      <Avatar className="h-8 w-8">
-                        <AvatarImage
-                          src={review.student?.image}
-                          alt={review.student?.name}
-                        />
-                        <AvatarFallback>
-                          {review.student?.name?.charAt(0) || "S"}
-                        </AvatarFallback>
+                      <Avatar className="h-12 w-12">
+                        {review.student?.image ? (
+                          <AvatarImage
+                            src={review.student?.image}
+                            alt={review.student?.name}
+                          />
+                        ) : (
+                          <AvatarFallback>
+                            {review.student?.name?.charAt(0)}
+                          </AvatarFallback>
+                        )}
                       </Avatar>
                       <span className="font-medium text-sm">
                         {review.student?.name || "Student"}

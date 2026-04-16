@@ -1,6 +1,8 @@
 import { getUsersAction } from "@/actions/admin.action";
 import { UserList } from "@/components/modules/adminPage/UserList";
 
+export const dynamic = "force-dynamic";
+
 export default async function UserManagementPage() {
   const { data: users, error } = await getUsersAction();
 

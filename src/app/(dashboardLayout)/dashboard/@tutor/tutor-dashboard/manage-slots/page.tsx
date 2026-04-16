@@ -23,6 +23,8 @@ function LoadingSpinner() {
   );
 }
 
+export const dynamic = "force-dynamic";
+
 export default async function ManageSlotsPage() {
   return (
     <div className="space-y-6">

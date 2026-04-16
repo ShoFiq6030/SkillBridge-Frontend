@@ -23,7 +23,9 @@ import Link from "next/link";
 import { ModeToggle } from "./ModeToggle";
 import { authClient } from "@/lib/auth-client";
 import { DropdownMenuAvatar } from "./DropdownMenuAvatar";
-
+import { User } from "@/types";
+import LogoPng from "../../../public/skillBridge-logo.png";
+import Image from "next/image";
 
 interface MenuItem {
   title: string;
@@ -35,13 +37,7 @@ interface MenuItem {
 
 interface Navbar1Props {
   className?: string;
-  logo?: {
-    url: string;
-    src: string;
-    alt: string;
-    title: string;
-    className?: string;
-  };
+
   menu?: MenuItem[];
   auth?: {
     login: {
@@ -56,12 +52,6 @@ interface Navbar1Props {
 }
 
 const Navbar = ({
-  logo = {
-    url: "/",
-    src: "/skillbridge-logo.png",
-    alt: "logo",
-    title: "",
-  },
   menu = [
     { title: "Home", url: "/" },
     {
@@ -72,7 +62,6 @@ const Navbar = ({
       title: "About",
       url: "/about",
     },
-   
   ],
   auth = {
     login: { title: "Login", url: "/login" },
@@ -88,7 +77,13 @@ const Navbar = ({
   } = authClient.useSession();
   // console.log(session);
   // console.log("navbar");
-  const user  = session?.user
+  const user = session?.user;
+
+  const logo = {
+    url: "/",
+    alt: "logo",
+    title: "",
+  };
 
   return (
     <section className={cn("py-4 ", className)}>
@@ -98,9 +93,11 @@ const Navbar = ({
           <div className="flex items-center gap-6">
             {/* Logo */}
             <a href={logo.url} className="flex items-center gap-2">
-              <img
-                src={logo.src}
-                className="max-h-10 pl-5 dark:invert"
+              <Image
+                src={LogoPng}
+                width={80}
+                height={80}
+                className="max-h-10 pl-5 dark:invert "
                 alt={logo.alt}
               />
               <span className="text-lg font-semibold tracking-tighter">
@@ -122,8 +119,16 @@ const Navbar = ({
               <div className="flex items-center gap-2">
                 <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
               </div>
-            ) :    user ? (
-              <DropdownMenuAvatar user={ user} />
+            ) : user ? (
+              <DropdownMenuAvatar
+                user={
+                  {
+                    ...user,
+                    createdAt: user.createdAt.toISOString(),
+                    updatedAt: user.updatedAt.toISOString(),
+                  } as User
+                }
+              />
             ) : (
               <div className="flex gap-2">
                 <Button asChild variant="outline" size="sm">
@@ -134,7 +139,6 @@ const Navbar = ({
                 </Button>
               </div>
             )}
-         
           </div>
         </nav>
 
@@ -143,8 +147,10 @@ const Navbar = ({
           <div className="flex items-center justify-between">
             {/* Logo */}
             <a href={logo.url} className="flex items-center gap-2">
-              <img
-                src={logo.src}
+              <Image
+                src={LogoPng}
+                width={80}
+                height={80}
                 className="max-h-8 dark:invert"
                 alt={logo.alt}
               />
@@ -159,8 +165,10 @@ const Navbar = ({
                 <SheetHeader>
                   <SheetTitle>
                     <a href={logo.url} className="flex items-center gap-2">
-                      <img
-                        src={logo.src}
+                      <Image
+                        src={LogoPng}
+                        width={80}
+                        height={80}
                         className="max-h-8 dark:invert"
                         alt={logo.alt}
                       />
@@ -176,14 +184,30 @@ const Navbar = ({
                     {menu.map((item) => renderMobileMenuItem(item))}
                   </Accordion>
 
-                  <div className="flex flex-col gap-3">
-                    <Button asChild variant="outline">
-                      <Link href={auth.login.url}>{auth.login.title}</Link>
-                    </Button>
-                    <Button asChild>
-                      <Link href={auth.signup.url}>{auth.signup.title}</Link>
-                    </Button>
-                  </div>
+                  {isPending ? (
+                    <div className="flex items-center gap-2">
+                      <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+                    </div>
+                  ) : user ? (
+                    <DropdownMenuAvatar
+                      user={
+                        {
+                          ...user,
+                          createdAt: user.createdAt.toISOString(),
+                          updatedAt: user.updatedAt.toISOString(),
+                        } as User
+                      }
+                    />
+                  ) : (
+                    <div className="flex flex-col gap-3">
+                      <Button asChild variant="outline">
+                        <Link href={auth.login.url}>{auth.login.title}</Link>
+                      </Button>
+                      <Button asChild>
+                        <Link href={auth.signup.url}>{auth.signup.title}</Link>
+                      </Button>
+                    </div>
+                  )}
                 </div>
               </SheetContent>
             </Sheet>

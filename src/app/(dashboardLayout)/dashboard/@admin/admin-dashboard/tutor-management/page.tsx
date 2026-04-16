@@ -2,6 +2,8 @@ import { adminService } from "@/services/admin.service";
 import { TutorList } from "@/components/modules/adminPage/TutorList";
 import { Button } from "@/components/ui/button";
 
+export const dynamic = "force-dynamic";
+
 export default async function TutorManagementPage() {
   const { data: tutors, error } = await adminService.getTutors();
 
