@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { FcGoogle } from "react-icons/fc";
 import {
   Card,
   CardContent,
@@ -17,7 +18,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { authClient } from "@/lib/auth-client";
+import { authClient, signInWithGoogle } from "@/lib/auth-client";
 import { useForm } from "@tanstack/react-form";
 
 import { Label } from "@/components/ui/label";
@@ -36,18 +37,7 @@ const formSchema = z.object({
 });
 
 export function RegisterForm({ ...props }: React.ComponentProps<typeof Card>) {
-  const handleGoogleLogin = async () => {
-    try {
-      const data = await authClient.signIn.social({
-        provider: "google",
-        callbackURL: "/",
-      });
-
-      console.log(data);
-    } catch (error) {
-      console.error("Google login failed:", error);
-    }
-  };
+ 
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
@@ -216,12 +206,12 @@ export function RegisterForm({ ...props }: React.ComponentProps<typeof Card>) {
           Register
         </Button>
         <Button
-          onClick={() => handleGoogleLogin()}
+          onClick={signInWithGoogle}
           variant="outline"
           type="button"
           className="w-full"
         >
-          Continue with Google
+         <FcGoogle /> Continue with Google
         </Button>
       </CardFooter>
     </Card>

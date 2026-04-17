@@ -18,12 +18,13 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { authClient } from "@/lib/auth-client";
+import { authClient, signInWithGoogle } from "@/lib/auth-client";
 import { useForm } from "@tanstack/react-form";
 import { toast } from "sonner";
 import * as z from "zod";
 import { useState } from "react";
 import { env } from "@/env";
+import { FcGoogle } from "react-icons/fc";
 
 const formSchema = z.object({
   password: z.string().min(8, "Minimum length is 8"),
@@ -32,14 +33,6 @@ const formSchema = z.object({
 
 export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
   const [showPassword, setShowPassword] = useState(false);
-  const handleGoogleLogin = async () => {
-    const data = authClient.signIn.social({
-      provider: "google",
-      callbackURL: "/",
-    });
-
-    console.log(data);
-  };
 
   const form = useForm({
     defaultValues: {
@@ -155,12 +148,12 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
           Login
         </Button>
         <Button
-          onClick={() => handleGoogleLogin()}
+          onClick={signInWithGoogle}
           variant="outline"
           type="button"
           className="w-full"
         >
-          Continue with Google
+        <FcGoogle />  Continue with Google
         </Button>
       </CardFooter>
     </Card>
