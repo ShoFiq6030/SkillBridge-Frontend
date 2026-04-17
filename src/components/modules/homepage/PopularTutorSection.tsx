@@ -63,7 +63,7 @@ export default async function PopularTutorSection() {
             </div>
           ) : (
             tutors.map((tutor: Tutor) => (
-              <TutorCard key={tutor.id} tutor={tutor} />
+              <TutorCard key={tutor.id} tutor={tutor} isTrending={true} />
             ))
           )}
         </div>

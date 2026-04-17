@@ -3,7 +3,13 @@ import FavoriteButton from "./FavoriteButton";
 import Link from "next/link";
 import { Star, Flame, Clock } from "lucide-react";
 
-export default function TutorCard({ tutor }: { tutor: Tutor }) {
+export default function TutorCard({
+  tutor,
+  isTrending = false,
+}: {
+  tutor: Tutor;
+  isTrending?: boolean;
+}) {
   return (
     <article className="group h-full overflow-hidden rounded-2xl border border-border bg-card text-card-foreground shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 dark:border-neutral-700 dark:bg-slate-900/95">
       {/* Header Image Section */}
@@ -31,12 +37,14 @@ export default function TutorCard({ tutor }: { tutor: Tutor }) {
         </div>
 
         {/* Badge Section - Top Left */}
-        <div className="absolute left-4 top-4 flex items-center gap-2">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/95 px-3 py-1 text-xs font-semibold text-primary-foreground shadow-lg backdrop-blur-sm">
-            <Flame className="h-3 w-3" />
-            Trending
-          </span>
-        </div>
+        {isTrending && (
+          <div className="absolute left-4 top-4 flex items-center gap-2">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/95 px-3 py-1 text-xs font-semibold text-primary-foreground shadow-lg backdrop-blur-sm">
+              <Flame className="h-3 w-3" />
+              Trending
+            </span>
+          </div>
+        )}
 
         {/* Favorite Button - Top Right */}
         <div className="absolute right-4 top-4 z-20">
