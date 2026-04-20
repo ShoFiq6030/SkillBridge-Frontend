@@ -375,4 +375,41 @@ export const tutorService = {
       };
     }
   },
+
+  createTutorProfile: async function (profileData: {
+    headline: string;
+    bio: string;
+    hourlyRate: number;
+    currency: string;
+    language: string;
+    experienceYears: number;
+  }) {
+    try {
+      const cookieStore = await cookies();
+      const res = await fetch(`${env.API_URL}/api/tutor-profile`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieStore.toString(),
+        },
+        body: JSON.stringify(profileData),
+        cache: "no-store",
+      });
+
+      const data = await res.json();
+
+      if (!data.success) {
+        return {
+          data: null,
+          error: {
+            message: data.message || "Failed to create tutor profile",
+          },
+        };
+      }
+
+      return { data: data.data, error: null };
+    } catch (err) {
+      return { data: null, error: { message: "Something Went Wrong" } };
+    }
+  },
 };

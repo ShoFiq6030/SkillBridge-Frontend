@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { format, parseISO, isToday, isThisWeek } from "date-fns";
+import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
@@ -49,7 +50,7 @@ export default async function TutorDashboard() {
             {tutorDataResult.error?.message || "Unknown error"}
           </p>
           <Button asChild variant="outline" className="mt-4">
-            <a href="/dashboard/tutor-dashboard/manage-subjects">
+            <a href="/dashboard/tutor-dashboard/create-tutor-profile">
               Create Tutor Profile
             </a>
           </Button>
@@ -292,6 +293,9 @@ export default async function TutorDashboard() {
                 <p className="text-sm">{tutorData.language}</p>
               </div>
             </div>
+            <Button variant="outline" className="mt-2" asChild>
+              <Link href="/account?section=tutor-profile">update Profile</Link>
+            </Button>
           </CardContent>
         </Card>
 

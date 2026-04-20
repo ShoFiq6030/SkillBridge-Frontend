@@ -1,8 +1,37 @@
 "use server";
 import { tutorService } from "@/services/tutor.service";
 import { Tutor } from "@/types/tutor.type";
-import { updateTag } from "next/cache";
+import { updateTag, revalidatePath } from "next/cache";
 import { bookingService } from "@/services/booking.service";
+
+export const createTutorProfileAction = async (profileData: {
+  headline: string;
+  bio: string;
+  hourlyRate: number;
+  currency: string;
+  language: string;
+  experienceYears: number;
+}) => {
+  try {
+    const res = await tutorService.createTutorProfile(profileData);
+    if (res.data === null) {
+      return {
+        data: null,
+        error: {
+          message: res.error?.message || "Failed to create tutor profile",
+        },
+      };
+    }
+    revalidatePath("/dashboard/tutor-dashboard");
+    updateTag("tutor-profile-auth");
+    return { data: res.data, error: null };
+  } catch (err: any) {
+    return {
+      data: null,
+      error: { message: err.message || "Something Went Wrong" },
+    };
+  }
+};
 
 export const updateTutorProfile = async (
   tutorId: string,
