@@ -127,7 +127,7 @@ const ReviewSection: React.FC = () => {
   return (
     <div className="bg-green-900 dark:bg-gray-900 py-16 px-4 text-white rounded-2xl overflow-hidden">
       <h2 className="text-3xl font-semibold text-center mb-12">
-        Feedback from Our{" "}
+        Feedback from {" "}
         <span className="text-yellow-400 italic">Student</span>
       </h2>
 
@@ -136,7 +136,7 @@ const ReviewSection: React.FC = () => {
         <Card review={reviews[prevIndex]} />
 
         {/* Active with slide animation */}
-        <div className="w-[350px]">
+        <div className="w-87.5">
           <AnimatePresence custom={direction} mode="wait">
             <motion.div
               key={reviews[index].id}

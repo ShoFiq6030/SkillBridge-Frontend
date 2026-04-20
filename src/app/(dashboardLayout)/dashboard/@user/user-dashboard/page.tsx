@@ -20,9 +20,10 @@ export default async function UserDashboard() {
   
   const bookings = bookingResponse?.data || [];
 
+
   return (
     <div>
-      <LoadingPage />
+      {/* <LoadingPage /> */}
       <UserDashboardClient bookings={bookings} />
     </div>
   );

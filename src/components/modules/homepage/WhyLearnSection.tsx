@@ -73,7 +73,7 @@ const WhyLearnSection: React.FC = () => {
             Why learn with
           </h2>
           <h2 className="text-4xl font-bold text-orange-500 italic mt-2">
-            Skillhub?
+            SkillBridge?
           </h2>
         </div>
 

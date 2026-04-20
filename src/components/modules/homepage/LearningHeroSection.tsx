@@ -39,7 +39,7 @@ export default function LearningHeroSection() {
         <div className="mx-auto max-w-3xl text-center">
           <h2 className="text-balance text-3xl font-semibold leading-tight tracking-tight text-[#20130d] dark:text-white md:text-5xl">
             Accessing your{" "}
-            <span className="font-serif italic font-medium">course</span>
+            <span className="font-serif italic font-medium"> course</span>{" "}
             anywhere to learn new skill for grow your{" "}
             <span className="font-serif italic font-medium text-[#f47c4d] dark:text-orange-400">
               Career
@@ -67,8 +67,6 @@ export default function LearningHeroSection() {
           />
 
           <div className="relative overflow-hidden rounded-[28%_28%_28%_28%/20%_20%_20%_20%] bg-white dark:bg-neutral-800 shadow-[0_25px_80px_rgba(0,0,0,0.08)] dark:shadow-[0_25px_80px_rgba(0,0,0,0.3)]">
-            
-
             <div className="aspect-16/7 w-full">
               <video
                 src={"/skill-bridge.video.mp4"}

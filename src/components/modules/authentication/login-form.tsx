@@ -33,6 +33,7 @@ const formSchema = z.object({
 
 export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm({
     defaultValues: {
@@ -52,7 +53,7 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
         console.log(data);
 
         if (error) {
-          toast.error(error.message, { id: toastId });
+          toast.error(error.message || "Something went wrong, please try again.", { id: toastId });
           return;
         }
         toast.success("User Logged in Successfully", { id: toastId });
@@ -61,6 +62,18 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
       }
     },
   });
+
+  const handleGoogleSignIn = async () => {
+    try {
+      setIsLoading(true);
+
+      await signInWithGoogle();
+      setIsLoading(false);
+    } catch (error) {
+      toast.error("Google sign-in failed. Please try again.");
+    } finally {
+    }
+  };
 
   return (
     <Card {...props}>
@@ -147,14 +160,21 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
         <Button form="login-form" type="submit" className="w-full">
           Login
         </Button>
-        <Button
-          onClick={signInWithGoogle}
-          variant="outline"
-          type="button"
-          className="w-full"
-        >
-        <FcGoogle />  Continue with Google
-        </Button>
+        {isLoading ? (
+          <Button className="flex items-center justify-center w-full" disabled>
+            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500"></div>
+          </Button>
+        ) : (
+          <Button
+            onClick={handleGoogleSignIn}
+            variant="outline"
+            type="button"
+            disabled={isLoading}
+            className={`w-full ${isLoading && "cursor-not-allowed opacity-50 "}`}
+          >
+            <FcGoogle /> Continue with Google
+          </Button>
+        )}
       </CardFooter>
     </Card>
   );
