@@ -93,11 +93,11 @@ export const addSubject = async (
 
 export const createCategory = async (
   name: string,
-  slug: string,
+ 
 ) => {
   try {
     
-    const res = await tutorService.createCategory(name, slug);
+    const res = await tutorService.createCategory(name);
     updateTag("categories");
     if (res.data===null) {
         return { data: null, error: { message: res.error?.message || "Failed to create category" } };

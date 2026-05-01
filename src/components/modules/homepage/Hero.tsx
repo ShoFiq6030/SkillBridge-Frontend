@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { FaStar } from "react-icons/fa";
 import { RiGlobalLine } from "react-icons/ri";
 
@@ -113,7 +114,7 @@ function CourseCard({
 export default function Hero({
   title = "SkillBridge",
   subtitle = "Connect with Expert Tutors, Learn Anything, Anytime.",
-  ctaLabel = "Explore our courses",
+  ctaLabel = "Explore our tutors",
 }: HeroSectionProps) {
   return (
     <section className="relative overflow-hidden bg-[#165f00] rounded-2xl  text-white">
@@ -158,12 +159,12 @@ export default function Hero({
             {subtitle}
           </p>
 
-          <button className="mt-10 inline-flex items-center gap-3 rounded-full bg-[#ff6b2c] px-8 py-5 text-lg font-semibold text-white shadow-[0_18px_45px_rgba(255,107,44,0.28)] transition hover:-translate-y-0.5">
+          <Link href="/tutors" className="mt-10 inline-flex items-center gap-3 rounded-full bg-[#ff6b2c] px-8 py-5 text-lg font-semibold text-white shadow-[0_18px_45px_rgba(255,107,44,0.28)] transition hover:-translate-y-0.5">
             {ctaLabel}
             <span aria-hidden="true" className="text-2xl leading-none">
               →
             </span>
-          </button>
+          </Link>
 
           <div className="mt-12 flex flex-wrap items-center gap-4 text-lg">
             <div className="flex items-center gap-1 text-[#ffb01f]">

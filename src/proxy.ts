@@ -21,7 +21,7 @@ export async function proxy(request: NextRequest) {
     request.cookies.get("__secure.session-token") ||
     request.cookies.get("__Secure-better-auth.session_token") || 
     request.cookies.get("better-auth.session_token")  
-  console.log("Session token in proxy:", sessionToken);
+  // console.log("Session token in proxy:", sessionToken);
 
   //* User is not authenticated at all
   if (!sessionToken) {

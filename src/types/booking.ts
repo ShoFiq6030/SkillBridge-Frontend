@@ -35,7 +35,7 @@ export interface TutorSubject {
   categoryId: string;
   createdAt: string;
   updatedAt: string;
-  category?: {
+  category: {
     id: string;
     name: string;
     slag: string;
@@ -64,6 +64,17 @@ export interface Booking {
     createdAt: string;
     updatedAt: string;
   };
+  payment:{
+    id: string;
+    bookingId: string;
+    amount: number;
+    currency: string;
+    status: "PENDING" | "COMPLETED" | "FAILED";
+    provider: string;
+    transactionId: string;
+    createdAt: string;
+    updatedAt: string;
+  }
 }
 
 export interface BookingResponse {

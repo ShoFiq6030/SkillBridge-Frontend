@@ -236,7 +236,7 @@ export const tutorService = {
     }
   },
 
-  createCategory: async function (name: string, slug: string) {
+  createCategory: async function (name: string, ) {
     try {
       const cookieStore = await cookies();
       const res = await fetch(`${env.API_URL}/api/categories`, {
@@ -245,7 +245,7 @@ export const tutorService = {
           "Content-Type": "application/json",
           Cookie: cookieStore.toString(),
         },
-        body: JSON.stringify({ name, slug }),
+        body: JSON.stringify({ name }),
       });
       const responseData = await res.json();
 

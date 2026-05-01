@@ -37,7 +37,15 @@ export const updateReviewAction = async (
 };
 
 export const bookSlotAction = async (bookingData: BookingData ) => {
+  console.log(bookingData);
   const result = await bookingService.bookSlot(bookingData);
   revalidatePath("/tutors");
+  return result;
+}
+
+export const processPaymentAction = async (bookingId: string) => {
+  
+  const result = await bookingService.processPayment(bookingId);
+  // revalidatePath("/dashboard/user-dashboard");
   return result;
 }

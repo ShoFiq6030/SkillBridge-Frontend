@@ -6,6 +6,9 @@ import { Button } from "@/components/ui/button";
 import { Star, MapPin, Clock, DollarSign } from "lucide-react";
 import { Tutor, TutorSubject } from "@/types/tutor.type";
 import { authClient } from "@/lib/auth-client";
+import { userService } from "@/services/user.service";
+import { bookingService } from "@/services/booking.service";
+import { cookies } from "next/headers";
 
 export default async function TutorDetailPage({
   params,
@@ -14,10 +17,24 @@ export default async function TutorDetailPage({
 }) {
   const { tutorId } = await params;
   const { data: tutor, error } = await tutorService.getTutorByTutorId(tutorId);
+  // const session = await authClient.getSession();
+  const cookieStore = await cookies();
 
-  // const session = await getUserInServer();
+  const sessionCookie =
+    cookieStore.get("session_token") ||
+    cookieStore.get("__secure.session-token") ||
+    cookieStore.get("__Secure-better-auth.session_token") ||
+    cookieStore.get("better-auth.session_token");
+
   // console.log(session);
-
+  let bookedSlotsOfThisTutor: any[] = [];
+  if (sessionCookie) {
+    const session = await userService.getSession();
+    
+    const getUserBookedSlotsOfThisTutor =
+      await bookingService.getUserBookedSlotsOfTutor(tutorId);
+    bookedSlotsOfThisTutor = getUserBookedSlotsOfThisTutor.data || [];
+  }
   // console.log(tutor);
 
   if (error || !tutor) {
@@ -128,7 +145,11 @@ export default async function TutorDetailPage({
             </CardContent>
           </Card>
 
-          <Slots slots={tutor.slots} subjects={tutor.subjects} />
+          <Slots
+            slots={tutor.slots}
+            subjects={tutor.subjects}
+            bookedSlotsOfThisTutor={bookedSlotsOfThisTutor}
+          />
         </div>
 
         <div className="lg:col-span-1">

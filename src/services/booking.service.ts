@@ -74,7 +74,7 @@ export const bookingService = {
       });
       const data = await res.json();
       console.log(data);
-      if (data.success === false) {
+      if (!data.success) {
         return {
           data: null,
           error: { message: data.message || "Booking Failed" },
@@ -172,4 +172,55 @@ export const bookingService = {
       return { data: null, error: { message: "Something Went Wrong" } };
     }
   },
+  getUserBookedSlotsOfTutor: async function (tutorId: string) {
+    try {
+      const cookieStore = await cookies();
+      const res = await fetch(`${env.API_URL}/api/booking/user-booked-slots/${tutorId}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieStore.toString(),
+        },
+        cache: "no-store",
+      });
+      const data = await res.json();
+      if (data.success === false) {
+        return {
+          data: null,
+          error: { message: data.message || "Failed to fetch booked slots" },
+        };
+      }
+      return { data: data.data, error: null };
+    } catch (error) {
+      return { data: null, error: { message: "Something Went Wrong" } };
+    }
+  },
+
+  processPayment: async function (bookingId: string) {
+    try {
+      const cookieStore = await cookies();
+      const res = await fetch(`${env.API_URL}/api/payment/create-stripe-checkout-session`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieStore.toString(),
+        },
+        cache: "no-store",
+        body: JSON.stringify({ bookingId }),
+      });
+      const data = await res.json();
+      console.log(data);
+      if (data.success === false) {
+        return {
+          data: null,
+          error: { message: data.message || "Failed to process payment" },
+        };
+      }
+      return { data: data, error: null };
+    } catch (error) {
+      return { data: null, error: { message: "Something Went Wrong" } };
+    }
+    }
+  
+
 };

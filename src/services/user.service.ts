@@ -5,7 +5,7 @@ export const userService = {
   getSession: async () => {
     try {
       const cookieStore = await cookies();
-      console.log(cookieStore)
+      // console.log(cookieStore)
 
       const res = await fetch(`${env.API_URL}/api/auth/get-session`, {
         headers: {
@@ -16,7 +16,7 @@ export const userService = {
       });
 
       const session = await res.json();
-      console.log("Session data in userService:", session);
+      // console.log("Session data in userService:", session);
 
       if (session === null) {
         return { data: null, error: { message: "Session is missing." } };

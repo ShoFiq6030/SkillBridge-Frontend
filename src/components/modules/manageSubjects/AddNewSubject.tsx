@@ -31,7 +31,7 @@ export default function AddNewSubject({ availableCategories }: { availableCatego
 
   const [createCategoryOpen, setCreateCategoryOpen] = useState(false);
   const [categoryName, setCategoryName] = useState("");
-  const [categorySlug, setCategorySlug] = useState("");
+  // const [categorySlug, setCategorySlug] = useState("");
 
   const handleAddClick = (categoryId: string) => {
     setCategoryToAdd(categoryId);
@@ -70,17 +70,17 @@ export default function AddNewSubject({ availableCategories }: { availableCatego
   const handleCloseCreateCategory = () => {
     setCreateCategoryOpen(false);
     setCategoryName("");
-    setCategorySlug("");
+    // setCategorySlug("");
   };
 
   const handleCreateCategory = async () => {
-    if (!categoryName.trim() || !categorySlug.trim()) {
-      toast.error("Both name and slug are required");
+    if (!categoryName.trim() ) {
+      toast.error("Name is required");
       return;
     }
 
     try {
-      const res = await createCategory(categoryName.trim(), categorySlug.trim());
+      const res = await createCategory(categoryName.trim());
       if (res.error) {
         toast.error(res.error.message || "Failed to create category");
       }
@@ -167,7 +167,7 @@ export default function AddNewSubject({ availableCategories }: { availableCatego
                 onChange={(e) => setCategoryName(e.target.value)}
               />
             </div>
-            <div className="grid gap-2">
+            {/* <div className="grid gap-2">
               <Label htmlFor="categorySlug">Slug</Label>
               <Input
                 id="categorySlug"
@@ -175,7 +175,7 @@ export default function AddNewSubject({ availableCategories }: { availableCatego
                 value={categorySlug}
                 onChange={(e) => setCategorySlug(e.target.value)}
               />
-            </div>
+            </div> */}
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={handleCloseCreateCategory}>

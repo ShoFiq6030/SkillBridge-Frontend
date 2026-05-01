@@ -64,15 +64,16 @@ export default function TutorCard({
           <h3 className="text-xl font-bold text-foreground capitalize tracking-tight">
             {tutor.user.name}
           </h3>
-          <p className="text-sm text-muted-foreground line-clamp-1">
-            {tutor.bio}
-          </p>
-        </div>
-
-        {/* Headline */}
+            {/* Headline */}
         <p className="line-clamp-2 min-h-10 text-sm font-medium text-foreground leading-5">
           {tutor.headline}
         </p>
+          <p className="text-sm text-muted-foreground line-clamp-1">
+            {tutor.bio.split(" ").slice(0, 15).join(" ")}
+          </p>
+        </div>
+
+      
 
         {/* Stats Grid */}
         <div className="grid grid-cols-3 gap-3 py-3 border-y border-border dark:border-neutral-700">

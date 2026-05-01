@@ -9,6 +9,7 @@ import CreateTutorProfileForm from "@/components/modules/create-tutor-profile/cr
 import { tutorService } from "@/services/tutor.service";
 import { userService } from "@/services/user.service";
 import Link from "next/link";
+export const dynamic = "force-dynamic";
 
 export default async function CreateTutorProfilePage() {
   const session = await userService.getSession();
