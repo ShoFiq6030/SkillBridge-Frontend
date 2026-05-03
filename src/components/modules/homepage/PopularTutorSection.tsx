@@ -15,7 +15,19 @@ export default async function PopularTutorSection() {
       revalidate: 60, // Revalidate every 60 seconds
     },
   );
-  // console.log(data);
+
+  if (error || !data) {
+    return (
+      <section className="bg-[#f5f3f1] dark:bg-neutral-900 px-6 py-16 md:px-10 lg:px-16 lg:py-20 rounded-4xl">
+        <div className="mx-auto max-w-6xl">
+          <div className="col-span-full text-center text-muted-foreground">
+            {error ? "Error loading tutors." : "Loading tutors..."}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   const tutors: Tutor[] = data.data;
 
   return (
@@ -56,10 +68,6 @@ export default async function PopularTutorSection() {
           {tutors.length === 0 ? (
             <div className="col-span-full text-center text-muted-foreground">
               No tutors found.
-            </div>
-          ) : error ? (
-            <div className="col-span-full text-center text-destructive">
-              Error loading tutors.
             </div>
           ) : (
             tutors.map((tutor: Tutor) => (
