@@ -1,0 +1,199 @@
+// hooks/useChat.ts
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import { env } from "@/env";
+import Pusher, { Channel } from "pusher-js";
+import { sendMessageAction } from "@/actions/chat.action";
+
+interface Message {
+  id: string;
+  content: string;
+  senderId: string;
+  sender: { id: string; name: string; image?: string };
+  createdAt: string;
+}
+
+// ✅ Single Pusher instance for the entire app
+let pusherSingleton: Pusher | null = null;
+
+const getPusher = (): Pusher => {
+  if (pusherSingleton) return pusherSingleton;
+
+  pusherSingleton = new Pusher(env.NEXT_PUBLIC_PUSHER_KEY, {
+    cluster: env.NEXT_PUBLIC_PUSHER_CLUSTER,
+    channelAuthorization: {
+      endpoint: `${env.NEXT_PUBLIC_API_URL}/api/pusher/auth`,
+      transport: "ajax",
+      // ✅ Custom handler to send cookies
+      customHandler: async ({ socketId, channelName }, callback) => {
+        try {
+          const res = await fetch(
+            `${env.NEXT_PUBLIC_API_URL}/api/pusher/auth`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              credentials: "include", // ✅ sends cookies
+              body: JSON.stringify({
+                socket_id: socketId,
+                channel_name: channelName,
+              }),
+            },
+          );
+
+          if (!res.ok) {
+            console.error("❌ Pusher auth failed:", res.status);
+            callback(new Error(`Auth failed: ${res.status}`), null);
+            return;
+          }
+
+          const data = await res.json();
+          callback(null, data);
+        } catch (err: any) {
+          console.error("❌ Pusher auth error:", err);
+          callback(err, null);
+        }
+      },
+    },
+  });
+
+  pusherSingleton.connection.bind("connected", () => {
+    console.log("✅ Pusher connected:", pusherSingleton?.connection.socket_id);
+  });
+
+  pusherSingleton.connection.bind("error", (err: any) => {
+    console.error("❌ Pusher connection error:", err);
+  });
+
+  pusherSingleton.connection.bind("state_change", (states: any) => {
+    console.log("🔄 Pusher state:", states.previous, "→", states.current);
+  });
+
+  return pusherSingleton;
+};
+
+export function useChat(
+  chatRoomId: string,
+  currentUserId: string,
+  currentUserName: string,
+  currentUserImage?: string,
+) {
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const sentMessageIdsRef = useRef<Set<string>>(new Set());
+  const channelRef = useRef<Channel | null>(null);
+
+  // Load existing messages
+  useEffect(() => {
+    const fetchMessages = async () => {
+      try {
+        const res = await fetch(`/api/chat/messages/${chatRoomId}`, {
+          credentials: "include",
+        });
+        const data = await res.json();
+        setMessages(Array.isArray(data.data) ? data.data : []);
+      } catch (error) {
+        console.error("Failed to fetch messages:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchMessages();
+  }, [chatRoomId]);
+
+  // Subscribe to channel
+  useEffect(() => {
+    const pusher = getPusher();
+    const channelName = `private-chat-${chatRoomId}`;
+
+    console.log("📡 Subscribing to channel:", channelName);
+    const channel = pusher.subscribe(channelName);
+    channelRef.current = channel;
+
+    channel.bind("pusher:subscription_succeeded", () => {
+      console.log("✅ Subscribed to:", channelName);
+    });
+
+    channel.bind("pusher:subscription_error", (error: any) => {
+      console.error("❌ Subscription error:", error);
+    });
+
+    channel.bind("new-message", (data: Message) => {
+      console.log("📨 New message from Pusher:", data);
+      setMessages((prev) => {
+        const exists = prev.some((m) => m.id === data.id);
+        if (
+          exists ||
+          sentMessageIdsRef.current.has(data.id) ||
+          data.senderId === currentUserId
+        ) {
+          console.log("⏭️ Skipping message:", data.id);
+          sentMessageIdsRef.current.delete(data.id);
+          return prev;
+        }
+        return [...prev, data];
+      });
+    });
+
+    return () => {
+      console.log("🔌 Unsubscribing from:", channelName);
+      channel.unbind_all();
+      pusher.unsubscribe(channelName);
+      channelRef.current = null;
+    };
+  }, [chatRoomId]);
+
+  // Send message with optimistic update
+  const sendMessage = async (content: string) => {
+    const trimmed = content.trim();
+    if (!trimmed) return;
+
+    const tempId = `temp-${Date.now()}-${Math.random()}`;
+    const tempMessage: Message = {
+      id: tempId,
+      content: trimmed,
+      senderId: currentUserId,
+      sender: {
+        id: currentUserId,
+        name: currentUserName,
+        image: currentUserImage,
+      },
+      createdAt: new Date().toISOString(),
+    };
+
+    setMessages((prev) => [...prev, tempMessage]);
+
+    try {
+      const result = await sendMessageAction(chatRoomId, trimmed);
+
+      if (!result.success) {
+        setMessages((prev) => prev.filter((m) => m.id !== tempId));
+      } else if (result.data?.id) {
+        sentMessageIdsRef.current.add(result.data.id);
+
+        setMessages((prev) =>
+          prev.map((m) =>
+            m.id === tempId
+              ? {
+                  id: result.data!.id,
+                  content: result.data!.content,
+                  senderId: result.data!.senderId,
+                  sender: {
+                    id: currentUserId,
+                    name: currentUserName,
+                    image: currentUserImage,
+                  },
+                  createdAt: result.data!.createdAt,
+                }
+              : m,
+          ),
+        );
+      }
+    } catch (error) {
+      console.error("❌ Error sending message:", error);
+      setMessages((prev) => prev.filter((m) => m.id !== tempId));
+    }
+  };
+
+  return { messages, isLoading, sendMessage };
+}

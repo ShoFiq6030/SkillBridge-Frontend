@@ -78,7 +78,6 @@ export const tutorService = {
       });
 
       const data = await res.json();
-      
 
       return { data: data.tutorProfile, error: null };
     } catch (err) {
@@ -236,7 +235,7 @@ export const tutorService = {
     }
   },
 
-  createCategory: async function (name: string, ) {
+  createCategory: async function (name: string) {
     try {
       const cookieStore = await cookies();
       const res = await fetch(`${env.API_URL}/api/categories`, {
@@ -367,7 +366,7 @@ export const tutorService = {
         return { data: null, error: { massage: "something went wrong" } };
       }
 
-      return { data:data.statistics, error: null };
+      return { data: data.statistics, error: null };
     } catch (e: any) {
       return {
         data: null,
@@ -409,6 +408,23 @@ export const tutorService = {
 
       return { data: data.data, error: null };
     } catch (err) {
+      return { data: null, error: { message: "Something Went Wrong" } };
+    }
+  },
+
+  getChatData: async function (bookingId: string) {
+    try {
+      const cookieStore = await cookies();
+      const res = await fetch(`${env.API_URL}/api/chat/room/${bookingId}`, {
+        headers: {
+          Cookie: cookieStore.toString(),
+        },
+        cache: "no-store",
+      });
+      const resData = await res.json();
+      return { data: resData, error: null };
+    } catch (err) {
+      console.error(err);
       return { data: null, error: { message: "Something Went Wrong" } };
     }
   },

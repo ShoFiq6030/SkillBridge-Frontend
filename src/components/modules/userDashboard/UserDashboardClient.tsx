@@ -130,7 +130,7 @@ export function UserDashboardClient({ bookings }: UserDashboardClientProps) {
 
       {/* Statistics Grid */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card className="relative overflow-hidden border-none shadow-sm bg-gradient-to-br from-blue-500/10 to-blue-600/5">
+        <Card className="relative overflow-hidden border-none shadow-sm bg-linear-to-br from-blue-500/10 to-blue-600/5">
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
             <CardTitle className="text-sm font-medium">
               Total Sessions
@@ -145,7 +145,7 @@ export function UserDashboardClient({ bookings }: UserDashboardClientProps) {
           </CardContent>
         </Card>
 
-        <Card className="relative overflow-hidden border-none shadow-sm bg-gradient-to-br from-orange-500/10 to-orange-600/5">
+        <Card className="relative overflow-hidden border-none shadow-sm bg-linear-to-br from-orange-500/10 to-orange-600/5">
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
             <CardTitle className="text-sm font-medium">Upcoming</CardTitle>
             <Clock className="h-4 w-4 text-orange-600" />
@@ -158,7 +158,7 @@ export function UserDashboardClient({ bookings }: UserDashboardClientProps) {
           </CardContent>
         </Card>
 
-        <Card className="relative overflow-hidden border-none shadow-sm bg-gradient-to-br from-green-500/10 to-green-600/5">
+        <Card className="relative overflow-hidden border-none shadow-sm bg-linear-to-br from-green-500/10 to-green-600/5">
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
             <CardTitle className="text-sm font-medium">Total Spent</CardTitle>
             <CreditCard className="h-4 w-4 text-green-600" />
@@ -171,7 +171,7 @@ export function UserDashboardClient({ bookings }: UserDashboardClientProps) {
           </CardContent>
         </Card>
 
-        <Card className="relative overflow-hidden border-none shadow-sm bg-gradient-to-br from-purple-500/10 to-purple-600/5">
+        <Card className="relative overflow-hidden border-none shadow-sm bg-linear-to-br from-purple-500/10 to-purple-600/5">
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
             <CardTitle className="text-sm font-medium">Top Subject</CardTitle>
             <CheckCircle2 className="h-4 w-4 text-purple-600" />
@@ -212,7 +212,7 @@ export function UserDashboardClient({ bookings }: UserDashboardClientProps) {
                   />
                 </div>
                 <Select value={statusFilter} onValueChange={setStatusFilter}>
-                  <SelectTrigger className="w-[140px] h-9">
+                  <SelectTrigger className="w-35 h-9">
                     <SelectValue placeholder="Status" />
                   </SelectTrigger>
                   <SelectContent>

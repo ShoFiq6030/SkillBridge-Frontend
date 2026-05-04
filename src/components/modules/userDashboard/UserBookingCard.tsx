@@ -13,6 +13,7 @@ import {
   XCircle,
   Loader2,
   Check,
+  MessageSquare,
 } from "lucide-react";
 import { useState } from "react";
 import { updateBookingStatusAction } from "@/actions/booking.action";
@@ -24,6 +25,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import Link from "next/link";
 
 interface UserBookingCardProps {
   booking: Booking;
@@ -135,7 +137,15 @@ export function UserBookingCard({ booking }: UserBookingCardProps) {
         </div>
       </div>
 
-      <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+      <div className="flex items-center gap-2 w-full sm:w-auto justify-end flex-wrap">
+        {booking.status === "CONFIRMED" && (
+          <Button asChild size="sm" variant="default">
+            <Link  href={`/dashboard/user-dashboard/chat/${booking.id}`}>
+              <MessageSquare className="mr-2 h-4 w-4" />
+              Chat
+            </Link>
+          </Button>
+        )}
         {canCancel && (
           <Button
             variant="outline"

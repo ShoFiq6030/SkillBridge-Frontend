@@ -10,9 +10,16 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { format, parseISO } from "date-fns";
-import { Eye, XCircle, CheckCircle, Loader2 } from "lucide-react";
+import {
+  Eye,
+  XCircle,
+  CheckCircle,
+  Loader2,
+  MessageSquare,
+} from "lucide-react";
 import { toast } from "sonner";
-import { updateBookingStatusAction  } from "@/actions/booking.action";
+import { updateBookingStatusAction } from "@/actions/booking.action";
+import Link from "next/link";
 
 interface BookingCardProps {
   booking: Booking;
@@ -23,7 +30,7 @@ interface BookingCardProps {
   onStatusChanged?: () => void;
 }
 
-export function BookingCard({
+export  function BookingCard({
   booking,
   slot,
   tutorSubject,
@@ -32,8 +39,7 @@ export function BookingCard({
   onStatusChanged,
 }: BookingCardProps) {
   const [isUpdating, setIsUpdating] = useState(false);
-  const updateAction =
-    updateBookingStatusAction 
+  const updateAction = updateBookingStatusAction;
 
   const formatTimeRange = (startAt: string, endAt: string) => {
     const start = parseISO(startAt);
@@ -163,6 +169,16 @@ export function BookingCard({
       <div className={isUpcoming ? "md:col-span-2" : ""}>
         <p className="font-medium">Actions</p>
         <div className={`${isUpcoming ? "flex flex-col space-y-2 mt-1" : ""}`}>
+          {booking.status === "CONFIRMED" && (
+            <Button asChild size="sm" variant="default">
+              <Link
+                href={`/dashboard/tutor-dashboard/manage-bookings/chat/${booking.id}`}
+              >
+                <MessageSquare className="mr-1 h-4 w-4" />
+                Chat
+              </Link>
+            </Button>
+          )}
           {isUpcoming && booking.status === "CONFIRMED" && (
             <>
               <Button

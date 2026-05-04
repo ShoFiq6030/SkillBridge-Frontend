@@ -65,7 +65,7 @@ const profileCards = [
 
 function RatingCard({ rating, comment }: { rating: number; comment: string }) {
   return (
-    <div className="absolute -top-8 left-0 z-20 flex w-40 h-12 items-center gap-3 rounded-[12px] bg-white px-4 py-3 shadow-[0_20px_60px_rgba(0,0,0,0.18)] sm:left-[220px] lg:-top-8 lg:left-0 animate-bounce ">
+    <div className="absolute -top-8 left-0 z-20 flex w-40 h-12 items-center gap-3 rounded-2xl bg-white px-4 py-3 shadow-[0_20px_60px_rgba(0,0,0,0.18)] sm:left-55 lg:-top-8 lg:left-0 animate-bounce ">
       <div className="min-w-0 ">
         <div className="mb-1 flex gap-1 text-stone-300">
           {Array.from({ length: rating }).map((_, i) => (
@@ -104,7 +104,7 @@ function CourseCard({
       <img
         src={image}
         alt={alt}
-        className="h-[180px] relative rounded-[34px] w-full object-cover object-top sm:h-[210px] lg:h-[180px]"
+        className="h-45 relative rounded-[34px] w-full object-cover object-top sm:h-52.5 lg:h-45"
       />
       <RatingCard rating={rating} comment={comment} />
     </div>
@@ -119,14 +119,14 @@ export default function Hero({
   return (
     <section className="relative overflow-hidden bg-[#165f00] rounded-2xl  text-white">
       <div className="absolute inset-0 opacity-20">
-        <div className="absolute inset-y-0 left-[44%] w-px -skew-x-[22deg] bg-white/20 " />
-        <div className="absolute inset-y-0 left-[58%] w-px -skew-x-[22deg] bg-white/10 " />
-        <div className="absolute inset-y-0 left-[73%] w-px -skew-x-[22deg] bg-white/10 " />
+        <div className="absolute inset-y-0 left-[44%] w-px -skew-x-22 bg-white/20 " />
+        <div className="absolute inset-y-0 left-[58%] w-px -skew-x-22 bg-white/10 " />
+        <div className="absolute inset-y-0 left-[73%] w-px -skew-x-22 bg-white/10 " />
       </div>
 
-      <div className="absolute -left-12 -top-10 h-28 w-28 rounded-[36px] bg-gradient-to-br from-white/35 to-white/5 rotate-[22deg] blur-[1px] animate-pulse" />
+      <div className="absolute -left-12 -top-10 h-28 w-28 rounded-[36px] bg-linear-to-br from-white/35 to-white/5 rotate-22 blur-[1px] animate-pulse" />
       <div className="absolute -left-3 top-0 h-12 w-12 rounded-b-full bg-black/10 animate-pulse" />
-      <div className="absolute bottom-10 left-[18%] h-20 w-20 rotate-[35deg] rounded-xl bg-white/10 animate-pulse" />
+      <div className="absolute bottom-10 left-[18%] h-20 w-20 rotate-35 rounded-xl bg-white/10 animate-pulse" />
       <div className="absolute bottom-0 right-0 h-16 w-16 rounded-tl-[28px] bg-white/12 animate-pulse" />
 
       <div className="relative mx-auto grid h-[90vh] max-w-7xl items-center gap-14 px-6 py-16 lg:grid-cols-[1.05fr_1fr] lg:px-10 lg:py-10">
@@ -138,7 +138,7 @@ export default function Hero({
               Expert Tutors
               <svg
                 viewBox="0 0 240 18"
-                className="mt-1 h-4 w-[220px] text-[#f1d447]"
+                className="mt-1 h-4 w-55 text-[#f1d447]"
                 fill="none"
                 aria-hidden="true"
               >
@@ -179,7 +179,7 @@ export default function Hero({
           </div>
         </div>
         {/* hero right  */}
-        <div className="relative min-h-[560px] lg:min-h-[520px]">
+        <div className="relative min-h-140 lg:min-h-130">
           {profileCards.map((card) => (
             <CourseCard
               key={card.id}
