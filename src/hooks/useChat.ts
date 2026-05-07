@@ -1,4 +1,3 @@
-// hooks/useChat.ts
 "use client";
 
 import { useEffect, useRef, useState } from "react";
@@ -14,7 +13,6 @@ interface Message {
   createdAt: string;
 }
 
-// ✅ Single Pusher instance for the entire app
 let pusherSingleton: Pusher | null = null;
 
 const getPusher = (): Pusher => {
@@ -23,26 +21,23 @@ const getPusher = (): Pusher => {
   pusherSingleton = new Pusher(env.NEXT_PUBLIC_PUSHER_KEY, {
     cluster: env.NEXT_PUBLIC_PUSHER_CLUSTER,
     channelAuthorization: {
-      endpoint: `${env.NEXT_PUBLIC_API_URL}/api/pusher/auth`,
+      endpoint: `/api/pusher/auth`, // ✅ relative URL via proxy
       transport: "ajax",
-      // ✅ Custom handler to send cookies
       customHandler: async ({ socketId, channelName }, callback) => {
         try {
-          const res = await fetch(
-            `${env.NEXT_PUBLIC_API_URL}/api/pusher/auth`,
-            {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              credentials: "include", // ✅ sends cookies
-              body: JSON.stringify({
-                socket_id: socketId,
-                channel_name: channelName,
-              }),
-            },
-          );
+          const res = await fetch(`/api/pusher/auth`, { // ✅ relative URL
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify({
+              socket_id: socketId,
+              channel_name: channelName,
+            }),
+          });
 
           if (!res.ok) {
-            console.error("❌ Pusher auth failed:", res.status);
+            pusherSingleton?.disconnect();
+            pusherSingleton = null;
             callback(new Error(`Auth failed: ${res.status}`), null);
             return;
           }
@@ -50,7 +45,8 @@ const getPusher = (): Pusher => {
           const data = await res.json();
           callback(null, data);
         } catch (err: any) {
-          console.error("❌ Pusher auth error:", err);
+          pusherSingleton?.disconnect();
+          pusherSingleton = null;
           callback(err, null);
         }
       },
@@ -71,7 +67,6 @@ const getPusher = (): Pusher => {
 
   return pusherSingleton;
 };
-
 export function useChat(
   chatRoomId: string,
   currentUserId: string,
@@ -83,23 +78,25 @@ export function useChat(
   const sentMessageIdsRef = useRef<Set<string>>(new Set());
   const channelRef = useRef<Channel | null>(null);
 
-  // Load existing messages
-  useEffect(() => {
-    const fetchMessages = async () => {
-      try {
-        const res = await fetch(`/api/chat/messages/${chatRoomId}`, {
-          credentials: "include",
-        });
-        const data = await res.json();
-        setMessages(Array.isArray(data.data) ? data.data : []);
-      } catch (error) {
-        console.error("Failed to fetch messages:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchMessages();
-  }, [chatRoomId]);
+  
+// Load existing messages
+useEffect(() => {
+  const fetchMessages = async () => {
+    try {
+      const res = await fetch(
+        `/api/chat/messages/${chatRoomId}`, // ✅ relative URL via proxy
+        { credentials: "include" },
+      );
+      const data = await res.json();
+      setMessages(Array.isArray(data.data) ? data.data : []);
+    } catch (error) {
+      console.error("Failed to fetch messages:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  fetchMessages();
+}, [chatRoomId]);
 
   // Subscribe to channel
   useEffect(() => {
@@ -122,16 +119,12 @@ export function useChat(
       console.log("📨 New message from Pusher:", data);
       setMessages((prev) => {
         const exists = prev.some((m) => m.id === data.id);
-        if (
-          exists ||
-          sentMessageIdsRef.current.has(data.id) ||
-          data.senderId === currentUserId
-        ) {
-          console.log("⏭️ Skipping message:", data.id);
+        if (exists || sentMessageIdsRef.current.has(data.id)) {
+          console.log("⏭️ Skipping duplicate:", data.id);
           sentMessageIdsRef.current.delete(data.id);
           return prev;
         }
-        return [...prev, data];
+        return [...prev, data]; // ✅ removed senderId check
       });
     });
 
@@ -143,7 +136,6 @@ export function useChat(
     };
   }, [chatRoomId]);
 
-  // Send message with optimistic update
   const sendMessage = async (content: string) => {
     const trimmed = content.trim();
     if (!trimmed) return;
@@ -169,6 +161,7 @@ export function useChat(
       if (!result.success) {
         setMessages((prev) => prev.filter((m) => m.id !== tempId));
       } else if (result.data?.id) {
+        // ✅ Register real ID before replacing so Pusher broadcast is skipped
         sentMessageIdsRef.current.add(result.data.id);
 
         setMessages((prev) =>

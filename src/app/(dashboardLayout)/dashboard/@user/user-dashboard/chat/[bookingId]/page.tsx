@@ -43,12 +43,13 @@ const res= await userService.getChatData(bookingId);
     );
   }
   const chatRoom = res.data.data;
-  console.log(chatRoom);
+  const bookingStatus= chatRoom.booking.status;
+  // console.log(chatRoom);
 
  
 
   return (
-    <div className="  mt-10 px-4 pb-10">
+    <div className=" min-h-[80vh] mt-10 px-4 pb-10">
       <div className="flex items-center gap-2 mb-6">
         <Button asChild variant="ghost" size="icon">
           <Link href="/dashboard">
@@ -59,6 +60,7 @@ const res= await userService.getChatData(bookingId);
       </div>
       <ChatBox
         chatRoomId={chatRoom.id}
+        bookingStatus={bookingStatus}
         currentUserId={session.data?.user?.id!}
       />
     </div>

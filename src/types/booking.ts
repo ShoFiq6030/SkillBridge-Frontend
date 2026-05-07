@@ -64,7 +64,7 @@ export interface Booking {
     createdAt: string;
     updatedAt: string;
   };
-  payment:{
+  payment: {
     id: string;
     bookingId: string;
     amount: number;
@@ -74,7 +74,16 @@ export interface Booking {
     transactionId: string;
     createdAt: string;
     updatedAt: string;
-  }
+  };
+}
+
+export interface BookingWithStudent extends Booking {
+  studentUser?: {
+    id: string;
+    name: string;
+    email: string;
+    image?: string;
+  };
 }
 
 export interface BookingResponse {

@@ -25,6 +25,9 @@ import {
 } from "@/components/ui/dialog";
 import { Booking } from "@/types/booking";
 // import {loadStripe} from '@stripe/stripe-js';
+import ChatBox from "./../../layout/ChatBox";
+import Link from "next/link";
+import { MessageCircleCodeIcon, MessageSquare } from "lucide-react";
 
 interface SlotsProps {
   slots: TutorSlot[];
@@ -162,8 +165,9 @@ const Slots: React.FC<SlotsProps> = ({
                           >
                             {booking.status}
                           </span>
-                          {booking.status === "PENDING" && <span>{booking.price}$</span>}
-                          
+                          {booking.status === "PENDING" && (
+                            <span>{booking.price}$</span>
+                          )}
                         </p>
                         <p className="text-sm text-muted-foreground">
                           {new Date(booking.slot.startAt).toLocaleDateString()}{" "}
@@ -194,8 +198,22 @@ const Slots: React.FC<SlotsProps> = ({
                             Pay Now
                           </Button>
                         )}
-                        {booking.status === "CONFIRMED" && <span className="text-green-500">PAID</span>}
-                          
+                        {booking.status === "CONFIRMED" && (
+                          <div className="flex gap-2">
+                            <span className="text-green-500">PAID</span>{" "}
+                            <span>
+                              {" "}
+                              <Button asChild size="sm" variant="default">
+                                <Link
+                                  href={`/dashboard/user-dashboard/chat/${booking.id}`}
+                                >
+                                  <MessageSquare className="mr-1 h-4 w-4" />
+                                  Chat
+                                </Link>
+                              </Button>
+                            </span>
+                          </div>
+                        )}
                       </div>
                     </div>
                   ))}

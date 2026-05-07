@@ -39,19 +39,22 @@ export default async function TutorChatPage({
           </p>
         </div>
         <Button asChild variant="outline" className="mt-4">
-          <Link href="/dashboard">Go Back to Dashboard</Link>
+          <Link href="/dashboard/tutor-dashboard/manage-bookings/chat">
+            Back to Bookings
+          </Link>
         </Button>
       </div>
     );
   }
 
   const chatRoom = res.data.data;
+  const bookingStatus=chatRoom.booking.status;
 
   return (
-    <div className=" mt-10 px-4 pb-10">
+    <div className="min-h-[80vh] mt-10 px-4 pb-10">
       <div className="flex items-center gap-2 mb-6">
         <Button asChild variant="ghost" size="icon">
-          <Link href="/dashboard">
+          <Link href="/dashboard/tutor-dashboard/manage-bookings/chat">
             <ArrowLeft className="h-4 w-4" />
           </Link>
         </Button>
@@ -59,6 +62,7 @@ export default async function TutorChatPage({
       </div>
       <ChatBox
         chatRoomId={chatRoom.id}
+        bookingStatus={bookingStatus}
         currentUserId={session.data?.user?.id!}
       />
     </div>

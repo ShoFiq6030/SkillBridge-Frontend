@@ -51,4 +51,24 @@ export const userService = {
       return { data: null, error: { message: "Something Went Wrong" } };
     }
   },
+  getUserBookings: async () => {
+    try {
+      const cookieStore = await cookies();
+      const res = await fetch(`${env.API_URL}/api/booking`, {
+        headers: {
+          Cookie: cookieStore.toString(),
+        },
+        credentials: "include",
+        cache: "no-store",
+      });
+      const bookings = await res.json();
+      return { data: bookings, error: null };
+    } catch (err) {
+      console.error(err);
+      return { data: null, error: { message: "Something Went Wrong" } };
+    }
+  },
+
+ 
+
 };
